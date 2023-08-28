@@ -1,0 +1,86 @@
+A:\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\appsettings.Development.json
+A:\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\appsettings.json
+A:\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\CondominusApi.exe
+A:\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\CondominusApi.deps.json
+A:\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\CondominusApi.runtimeconfig.json
+A:\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\CondominusApi.dll
+A:\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\CondominusApi.pdb
+A:\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\Microsoft.AspNetCore.OpenApi.dll
+A:\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\Microsoft.OpenApi.dll
+A:\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\Swashbuckle.AspNetCore.Swagger.dll
+A:\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+A:\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+A:\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\CondominusApi.csproj.AssemblyReference.cache
+A:\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\CondominusApi.GeneratedMSBuildEditorConfig.editorconfig
+A:\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\CondominusApi.AssemblyInfoInputs.cache
+A:\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\CondominusApi.AssemblyInfo.cs
+A:\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\CondominusApi.csproj.CoreCompileInputs.cache
+A:\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\CondominusApi.MvcApplicationPartsAssemblyInfo.cs
+A:\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\CondominusApi.MvcApplicationPartsAssemblyInfo.cache
+A:\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\staticwebassets\msbuild.CondominusApi.Microsoft.AspNetCore.StaticWebAssets.props
+A:\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\staticwebassets\msbuild.build.CondominusApi.props
+A:\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\staticwebassets\msbuild.buildMultiTargeting.CondominusApi.props
+A:\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\staticwebassets\msbuild.buildTransitive.CondominusApi.props
+A:\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\staticwebassets.pack.json
+A:\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\staticwebassets.build.json
+A:\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\staticwebassets.development.json
+A:\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\scopedcss\bundle\CondominusApi.styles.css
+A:\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\CondominusApi.csproj.CopyComplete
+A:\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\CondominusApi.dll
+A:\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\refint\CondominusApi.dll
+A:\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\CondominusApi.pdb
+A:\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\CondominusApi.genruntimeconfig.cache
+A:\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\ref\CondominusApi.dll
+C:\Arquivos\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\CondominusApi.csproj.AssemblyReference.cache
+C:\Arquivos\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\CondominusApi.GeneratedMSBuildEditorConfig.editorconfig
+C:\Arquivos\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\CondominusApi.AssemblyInfoInputs.cache
+C:\Arquivos\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\CondominusApi.AssemblyInfo.cs
+C:\Arquivos\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\CondominusApi.csproj.CoreCompileInputs.cache
+C:\Arquivos\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\CondominusApi.MvcApplicationPartsAssemblyInfo.cs
+C:\Arquivos\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\CondominusApi.MvcApplicationPartsAssemblyInfo.cache
+C:\Arquivos\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\CondominusApi.dll
+C:\Arquivos\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\refint\CondominusApi.dll
+C:\Arquivos\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\CondominusApi.pdb
+C:\Arquivos\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\appsettings.Development.json
+C:\Arquivos\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\appsettings.json
+C:\Arquivos\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\CondominusApi.exe
+C:\Arquivos\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\CondominusApi.deps.json
+C:\Arquivos\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\CondominusApi.runtimeconfig.json
+C:\Arquivos\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\CondominusApi.dll
+C:\Arquivos\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\CondominusApi.pdb
+C:\Arquivos\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\Microsoft.AspNetCore.OpenApi.dll
+C:\Arquivos\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\Microsoft.OpenApi.dll
+C:\Arquivos\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Arquivos\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Arquivos\3AI\ApiTcc\CondominusApi\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Arquivos\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\staticwebassets\msbuild.CondominusApi.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Arquivos\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\staticwebassets\msbuild.build.CondominusApi.props
+C:\Arquivos\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\staticwebassets\msbuild.buildMultiTargeting.CondominusApi.props
+C:\Arquivos\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\staticwebassets\msbuild.buildTransitive.CondominusApi.props
+C:\Arquivos\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\staticwebassets.pack.json
+C:\Arquivos\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\staticwebassets.build.json
+C:\Arquivos\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\staticwebassets.development.json
+C:\Arquivos\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\scopedcss\bundle\CondominusApi.styles.css
+C:\Arquivos\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\CondominusApi.csproj.CopyComplete
+C:\Arquivos\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\CondominusApi.genruntimeconfig.cache
+C:\Arquivos\3AI\ApiTcc\CondominusApi\obj\Debug\net7.0\ref\CondominusApi.dll
+C:\Arquivos\3AI\ApiTcc\CondominusApi 14-08\CondominusApi\obj\Debug\net7.0\CondominusApi.csproj.AssemblyReference.cache
+C:\Arquivos\3AI\ApiTcc\CondominusApi 14-08\CondominusApi\obj\Debug\net7.0\CondominusApi.GeneratedMSBuildEditorConfig.editorconfig
+C:\Arquivos\3AI\ApiTcc\CondominusApi 14-08\CondominusApi\obj\Debug\net7.0\CondominusApi.AssemblyInfoInputs.cache
+C:\Arquivos\3AI\ApiTcc\CondominusApi 14-08\CondominusApi\obj\Debug\net7.0\CondominusApi.AssemblyInfo.cs
+C:\Arquivos\3AI\ApiTcc\CondominusApi 14-08\CondominusApi\obj\Debug\net7.0\CondominusApi.csproj.CoreCompileInputs.cache
+C:\Arquivos\3AI\ApiTcc\CondominusApi 14-08\CondominusApi\obj\Debug\net7.0\CondominusApi.MvcApplicationPartsAssemblyInfo.cs
+C:\Arquivos\3AI\ApiTcc\CondominusApi 14-08\CondominusApi\obj\Debug\net7.0\CondominusApi.MvcApplicationPartsAssemblyInfo.cache
+C:\Arquivos\3AI\ApiTcc\CondominusApi 14-08\CondominusApi\obj\Debug\net7.0\CondominusApi.dll
+C:\Arquivos\3AI\ApiTcc\CondominusApi 14-08\CondominusApi\obj\Debug\net7.0\refint\CondominusApi.dll
+C:\Arquivos\3AI\ApiTcc\CondominusApi 14-08\CondominusApi\obj\Debug\net7.0\CondominusApi.pdb
+A:\3AI\ApiTcc\CondominusApiAtual\CondominusApi\obj\Debug\net7.0\CondominusApi.csproj.AssemblyReference.cache
+A:\3AI\ApiTcc\CondominusApiAtual\CondominusApi\obj\Debug\net7.0\CondominusApi.GeneratedMSBuildEditorConfig.editorconfig
+A:\3AI\ApiTcc\CondominusApiAtual\CondominusApi\obj\Debug\net7.0\CondominusApi.AssemblyInfoInputs.cache
+A:\3AI\ApiTcc\CondominusApiAtual\CondominusApi\obj\Debug\net7.0\CondominusApi.AssemblyInfo.cs
+A:\3AI\ApiTcc\CondominusApiAtual\CondominusApi\obj\Debug\net7.0\CondominusApi.csproj.CoreCompileInputs.cache
+A:\3AI\ApiTcc\CondominusApiAtual\CondominusApi\obj\Debug\net7.0\CondominusApi.MvcApplicationPartsAssemblyInfo.cs
+A:\3AI\ApiTcc\CondominusApiAtual\CondominusApi\obj\Debug\net7.0\CondominusApi.MvcApplicationPartsAssemblyInfo.cache
+A:\3AI\ApiTcc\CondominusApiAtual\CondominusApi\obj\Debug\net7.0\CondominusApi.dll
+A:\3AI\ApiTcc\CondominusApiAtual\CondominusApi\obj\Debug\net7.0\refint\CondominusApi.dll
+A:\3AI\ApiTcc\CondominusApiAtual\CondominusApi\obj\Debug\net7.0\CondominusApi.pdb
