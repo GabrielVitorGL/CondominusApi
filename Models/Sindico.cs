@@ -13,7 +13,7 @@ namespace CondominusApi.Models
         public string Cpf { get; set; }
         public string Nome { get; set; }
         public string Telefone { get; set; }
-        //public Condominio Condominio { get; set; }
-        //public int IdCondominio { get; set; }
+        public Condominio Condominio { get; set; }
+        public int IdCondominio { get; set; }
     }
 }

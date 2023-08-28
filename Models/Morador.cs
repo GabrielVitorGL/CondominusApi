@@ -11,7 +11,7 @@ namespace CondominusApi.Models
         public string Nome { get; set; }
         public string Cpf { get; set; }
         public string Telefone { get; set; }
-        //public Apartamento Apartamento { get; set; }
-        //public int IdApartamento { get; set; }
+        public Apartamento Apartamento { get; set; }
+        public int IdApartamento { get; set; }
     }
 }
