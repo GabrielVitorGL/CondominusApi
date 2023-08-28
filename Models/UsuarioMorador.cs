@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 
 namespace CondominusApi.Models
 {
-    public class Apartamento
+    public class UsuarioMorador
     {
         public int Id { get; set; }
-        public string Telefone { get; set; }
-        public string Numero { get; set; }
-        public string Status { get; set; } // Alterar para enum
+        public string Nome { get; set; }
+        public string Email { get; set; }
+        public string Hash { get; set; }
+        public string Salt { get; set; }
         public Condominio Condominio { get; set; }
         public int IdCondominio { get; set; }
     }

@@ -9,6 +9,7 @@ namespace CondominusApi.Models
     {
         public int Id { get; set; }
         public DateTime DataReserva { get; set; }
+        public string Status { get; set; } // Alterar para enum
         public Morador Morador { get; set; }
         public int IdMorador { get; set; }
         public AreaComum AreaComum { get; set; }

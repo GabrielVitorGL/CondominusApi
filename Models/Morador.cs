@@ -11,6 +11,7 @@ namespace CondominusApi.Models
         public string Nome { get; set; }
         public string Cpf { get; set; }
         public string Telefone { get; set; }
+        public string Status { get; set; } // Alterar para enum
         public Apartamento Apartamento { get; set; }
         public int IdApartamento { get; set; }
     }
