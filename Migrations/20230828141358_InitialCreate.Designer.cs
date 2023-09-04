@@ -186,10 +186,10 @@ namespace CondominusApi.Migrations
                     b.Property<DateTime>("DataRetirada")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("IdMorador")
+                    b.Property<int>("IdPessoa")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MoradorId")
+                    b.Property<int?>("PessoaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Remetente")
@@ -197,7 +197,7 @@ namespace CondominusApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MoradorId");
+                    b.HasIndex("PessoaId");
 
                     b.ToTable("Entregas");
 
@@ -207,7 +207,7 @@ namespace CondominusApi.Migrations
                             Id = 1,
                             DataEntrega = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3535),
                             DataRetirada = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3546),
-                            IdMorador = 0,
+                            IdPessoa = 0,
                             Remetente = "Sorriso Maroto"
                         },
                         new
@@ -215,7 +215,7 @@ namespace CondominusApi.Migrations
                             Id = 2,
                             DataEntrega = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3547),
                             DataRetirada = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3547),
-                            IdMorador = 0,
+                            IdPessoa = 0,
                             Remetente = "Marilia Mendonça"
                         },
                         new
@@ -223,7 +223,7 @@ namespace CondominusApi.Migrations
                             Id = 3,
                             DataEntrega = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3548),
                             DataRetirada = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3549),
-                            IdMorador = 0,
+                            IdPessoa = 0,
                             Remetente = "Paola Oliveira"
                         },
                         new
@@ -231,12 +231,12 @@ namespace CondominusApi.Migrations
                             Id = 4,
                             DataEntrega = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3550),
                             DataRetirada = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3550),
-                            IdMorador = 0,
+                            IdPessoa = 0,
                             Remetente = "João Gomes"
                         });
                 });
 
-            modelBuilder.Entity("CondominusApi.Models.Morador", b =>
+            modelBuilder.Entity("CondominusApi.Models.Pessoa", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -263,7 +263,7 @@ namespace CondominusApi.Migrations
 
                     b.HasIndex("ApartamentoId");
 
-                    b.ToTable("Moradores");
+                    b.ToTable("Pessoas");
 
                     b.HasData(
                         new
@@ -317,17 +317,17 @@ namespace CondominusApi.Migrations
                     b.Property<int>("IdAreaComum")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdMorador")
+                    b.Property<int>("IdPessoa")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MoradorId")
+                    b.Property<int?>("PessoaId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AreaComumId");
 
-                    b.HasIndex("MoradorId");
+                    b.HasIndex("PessoaId");
 
                     b.ToTable("Reservas");
 
@@ -337,28 +337,28 @@ namespace CondominusApi.Migrations
                             Id = 1,
                             DataReserva = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3600),
                             IdAreaComum = 0,
-                            IdMorador = 0
+                            IdPessoa = 0
                         },
                         new
                         {
                             Id = 2,
                             DataReserva = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3601),
                             IdAreaComum = 0,
-                            IdMorador = 0
+                            IdPessoa = 0
                         },
                         new
                         {
                             Id = 3,
                             DataReserva = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3602),
                             IdAreaComum = 0,
-                            IdMorador = 0
+                            IdPessoa = 0
                         },
                         new
                         {
                             Id = 4,
                             DataReserva = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3602),
                             IdAreaComum = 0,
-                            IdMorador = 0
+                            IdPessoa = 0
                         });
                 });
 
@@ -413,14 +413,14 @@ namespace CondominusApi.Migrations
 
             modelBuilder.Entity("CondominusApi.Models.Entrega", b =>
                 {
-                    b.HasOne("CondominusApi.Models.Morador", "Morador")
+                    b.HasOne("CondominusApi.Models.Pessoa", "Pessoa")
                         .WithMany()
-                        .HasForeignKey("MoradorId");
+                        .HasForeignKey("PessoaId");
 
-                    b.Navigation("Morador");
+                    b.Navigation("Pessoa");
                 });
 
-            modelBuilder.Entity("CondominusApi.Models.Morador", b =>
+            modelBuilder.Entity("CondominusApi.Models.Pessoa", b =>
                 {
                     b.HasOne("CondominusApi.Models.Apartamento", "Apartamento")
                         .WithMany()
@@ -435,13 +435,13 @@ namespace CondominusApi.Migrations
                         .WithMany()
                         .HasForeignKey("AreaComumId");
 
-                    b.HasOne("CondominusApi.Models.Morador", "Morador")
+                    b.HasOne("CondominusApi.Models.Pessoa", "Pessoa")
                         .WithMany()
-                        .HasForeignKey("MoradorId");
+                        .HasForeignKey("PessoaId");
 
                     b.Navigation("AreaComum");
 
-                    b.Navigation("Morador");
+                    b.Navigation("Pessoa");
                 });
 
             modelBuilder.Entity("CondominusApi.Models.Sindico", b =>

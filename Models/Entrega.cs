@@ -11,7 +11,7 @@ namespace CondominusApi.Models
         public string Remetente { get; set; }
         public DateTime DataEntrega { get; set; }
         public DateTime DataRetirada { get; set; }  
-        public Morador Morador { get; set; }
-        public int IdMorador { get; set; }      
+        public Pessoa Pessoa { get; set; }
+        public int IdPessoa { get; set; }      
     }
 }

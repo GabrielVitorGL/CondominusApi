@@ -20,7 +20,7 @@ namespace CondominusApi.Data
         public DbSet<AreaComum> AreasComuns { get; set; }
         public DbSet<Condominio> Condominios { get; set; }
         public DbSet<Entrega> Entregas { get; set; }
-        public DbSet<Morador> Moradores { get; set; }
+        public DbSet<Pessoa> Pessoas { get; set; }
         public DbSet<Reserva> Reservas { get; set; }
         public DbSet<Sindico> Sindicos { get; set; }
 
@@ -50,11 +50,11 @@ namespace CondominusApi.Data
                 new Entrega(){ Id = 3, Remetente = "Paola Oliveira", DataEntrega = DateTime.Now, DataRetirada = DateTime.Now },
                 new Entrega(){ Id = 4, Remetente = "João Gomes", DataEntrega = DateTime.Now, DataRetirada = DateTime.Now }
             );
-            modelBuilder.Entity<Morador>().HasData(
-                new Morador(){ Id = 1, Nome = "João Gomes", Cpf = "56751898901", Telefone = "11924316523"},
-                new Morador(){ Id = 2, Nome = "Paola Oliveira", Cpf = "63158658205", Telefone = "11975231678"},
-                new Morador(){ Id = 3, Nome = "Marilia Mendonça", Cpf = "27458823908", Telefone = "11937512056"},
-                new Morador(){ Id = 4, Nome = "Sorriso Maroto", Cpf = "32152898910", Telefone = "11987618735"}
+            modelBuilder.Entity<Pessoa>().HasData(
+                new Pessoa(){ Id = 1, Nome = "João Gomes", Cpf = "56751898901", Telefone = "11924316523"},
+                new Pessoa(){ Id = 2, Nome = "Paola Oliveira", Cpf = "63158658205", Telefone = "11975231678"},
+                new Pessoa(){ Id = 3, Nome = "Marilia Mendonça", Cpf = "27458823908", Telefone = "11937512056"},
+                new Pessoa(){ Id = 4, Nome = "Sorriso Maroto", Cpf = "32152898910", Telefone = "11987618735"}
             );
             modelBuilder.Entity<Reserva>().HasData(
                 new Reserva(){ Id = 1, DataReserva = DateTime.Now},

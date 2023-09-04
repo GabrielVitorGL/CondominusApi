@@ -50,15 +50,15 @@ CREATE TABLE [Sindicos] (
 );
 GO
 
-CREATE TABLE [Moradores] (
+CREATE TABLE [Pessoas] (
     [Id] int NOT NULL IDENTITY,
     [Nome] nvarchar(max) NULL,
     [Cpf] nvarchar(max) NULL,
     [Telefone] nvarchar(max) NULL,
     [ApartamentoId] int NULL,
     [IdApartamento] int NOT NULL,
-    CONSTRAINT [PK_Moradores] PRIMARY KEY ([Id]),
-    CONSTRAINT [FK_Moradores_Apartamentos_ApartamentoId] FOREIGN KEY ([ApartamentoId]) REFERENCES [Apartamentos] ([Id])
+    CONSTRAINT [PK_Pessoas] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Pessoas_Apartamentos_ApartamentoId] FOREIGN KEY ([ApartamentoId]) REFERENCES [Apartamentos] ([Id])
 );
 GO
 
@@ -67,23 +67,23 @@ CREATE TABLE [Entregas] (
     [Remetente] nvarchar(max) NULL,
     [DataEntrega] datetime2 NOT NULL,
     [DataRetirada] datetime2 NOT NULL,
-    [MoradorId] int NULL,
-    [IdMorador] int NOT NULL,
+    [PessoaId] int NULL,
+    [IdPessoa] int NOT NULL,
     CONSTRAINT [PK_Entregas] PRIMARY KEY ([Id]),
-    CONSTRAINT [FK_Entregas_Moradores_MoradorId] FOREIGN KEY ([MoradorId]) REFERENCES [Moradores] ([Id])
+    CONSTRAINT [FK_Entregas_Pessoas_PessoaId] FOREIGN KEY ([PessoaId]) REFERENCES [Pessoas] ([Id])
 );
 GO
 
 CREATE TABLE [Reservas] (
     [Id] int NOT NULL IDENTITY,
     [DataReserva] datetime2 NOT NULL,
-    [MoradorId] int NULL,
-    [IdMorador] int NOT NULL,
+    [PessoaId] int NULL,
+    [IdPessoa] int NOT NULL,
     [AreaComumId] int NULL,
     [IdAreaComum] int NOT NULL,
     CONSTRAINT [PK_Reservas] PRIMARY KEY ([Id]),
     CONSTRAINT [FK_Reservas_AreasComuns_AreaComumId] FOREIGN KEY ([AreaComumId]) REFERENCES [AreasComuns] ([Id]),
-    CONSTRAINT [FK_Reservas_Moradores_MoradorId] FOREIGN KEY ([MoradorId]) REFERENCES [Moradores] ([Id])
+    CONSTRAINT [FK_Reservas_Pessoas_PessoaId] FOREIGN KEY ([PessoaId]) REFERENCES [Pessoas] ([Id])
 );
 GO
 
@@ -120,36 +120,36 @@ IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Ende
     SET IDENTITY_INSERT [Condominios] OFF;
 GO
 
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'DataEntrega', N'DataRetirada', N'IdMorador', N'MoradorId', N'Remetente') AND [object_id] = OBJECT_ID(N'[Entregas]'))
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'DataEntrega', N'DataRetirada', N'IdPessoa', N'PessoaId', N'Remetente') AND [object_id] = OBJECT_ID(N'[Entregas]'))
     SET IDENTITY_INSERT [Entregas] ON;
-INSERT INTO [Entregas] ([Id], [DataEntrega], [DataRetirada], [IdMorador], [MoradorId], [Remetente])
+INSERT INTO [Entregas] ([Id], [DataEntrega], [DataRetirada], [IdPessoa], [PessoaId], [Remetente])
 VALUES (1, '2023-08-28T11:13:57.9173535-03:00', '2023-08-28T11:13:57.9173546-03:00', 0, NULL, N'Sorriso Maroto'),
 (2, '2023-08-28T11:13:57.9173547-03:00', '2023-08-28T11:13:57.9173547-03:00', 0, NULL, N'Marilia Mendonça'),
 (3, '2023-08-28T11:13:57.9173548-03:00', '2023-08-28T11:13:57.9173549-03:00', 0, NULL, N'Paola Oliveira'),
 (4, '2023-08-28T11:13:57.9173550-03:00', '2023-08-28T11:13:57.9173550-03:00', 0, NULL, N'João Gomes');
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'DataEntrega', N'DataRetirada', N'IdMorador', N'MoradorId', N'Remetente') AND [object_id] = OBJECT_ID(N'[Entregas]'))
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'DataEntrega', N'DataRetirada', N'IdPessoa', N'PessoaId', N'Remetente') AND [object_id] = OBJECT_ID(N'[Entregas]'))
     SET IDENTITY_INSERT [Entregas] OFF;
 GO
 
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'ApartamentoId', N'Cpf', N'IdApartamento', N'Nome', N'Telefone') AND [object_id] = OBJECT_ID(N'[Moradores]'))
-    SET IDENTITY_INSERT [Moradores] ON;
-INSERT INTO [Moradores] ([Id], [ApartamentoId], [Cpf], [IdApartamento], [Nome], [Telefone])
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'ApartamentoId', N'Cpf', N'IdApartamento', N'Nome', N'Telefone') AND [object_id] = OBJECT_ID(N'[Pessoas]'))
+    SET IDENTITY_INSERT [Pessoas] ON;
+INSERT INTO [Pessoas] ([Id], [ApartamentoId], [Cpf], [IdApartamento], [Nome], [Telefone])
 VALUES (1, NULL, N'56751898901', 0, N'João Gomes', N'11924316523'),
 (2, NULL, N'63158658205', 0, N'Paola Oliveira', N'11975231678'),
 (3, NULL, N'27458823908', 0, N'Marilia Mendonça', N'11937512056'),
 (4, NULL, N'32152898910', 0, N'Sorriso Maroto', N'11987618735');
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'ApartamentoId', N'Cpf', N'IdApartamento', N'Nome', N'Telefone') AND [object_id] = OBJECT_ID(N'[Moradores]'))
-    SET IDENTITY_INSERT [Moradores] OFF;
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'ApartamentoId', N'Cpf', N'IdApartamento', N'Nome', N'Telefone') AND [object_id] = OBJECT_ID(N'[Pessoas]'))
+    SET IDENTITY_INSERT [Pessoas] OFF;
 GO
 
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'AreaComumId', N'DataReserva', N'IdAreaComum', N'IdMorador', N'MoradorId') AND [object_id] = OBJECT_ID(N'[Reservas]'))
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'AreaComumId', N'DataReserva', N'IdAreaComum', N'IdPessoa', N'PessoaId') AND [object_id] = OBJECT_ID(N'[Reservas]'))
     SET IDENTITY_INSERT [Reservas] ON;
-INSERT INTO [Reservas] ([Id], [AreaComumId], [DataReserva], [IdAreaComum], [IdMorador], [MoradorId])
+INSERT INTO [Reservas] ([Id], [AreaComumId], [DataReserva], [IdAreaComum], [IdPessoa], [PessoaId])
 VALUES (1, NULL, '2023-08-28T11:13:57.9173600-03:00', 0, 0, NULL),
 (2, NULL, '2023-08-28T11:13:57.9173601-03:00', 0, 0, NULL),
 (3, NULL, '2023-08-28T11:13:57.9173602-03:00', 0, 0, NULL),
 (4, NULL, '2023-08-28T11:13:57.9173602-03:00', 0, 0, NULL);
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'AreaComumId', N'DataReserva', N'IdAreaComum', N'IdMorador', N'MoradorId') AND [object_id] = OBJECT_ID(N'[Reservas]'))
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'AreaComumId', N'DataReserva', N'IdAreaComum', N'IdPessoa', N'PessoaId') AND [object_id] = OBJECT_ID(N'[Reservas]'))
     SET IDENTITY_INSERT [Reservas] OFF;
 GO
 
@@ -164,16 +164,16 @@ GO
 CREATE INDEX [IX_Apartamentos_CondominioId] ON [Apartamentos] ([CondominioId]);
 GO
 
-CREATE INDEX [IX_Entregas_MoradorId] ON [Entregas] ([MoradorId]);
+CREATE INDEX [IX_Entregas_PessoaId] ON [Entregas] ([PessoaId]);
 GO
 
-CREATE INDEX [IX_Moradores_ApartamentoId] ON [Moradores] ([ApartamentoId]);
+CREATE INDEX [IX_Pessoas_ApartamentoId] ON [Pessoas] ([ApartamentoId]);
 GO
 
 CREATE INDEX [IX_Reservas_AreaComumId] ON [Reservas] ([AreaComumId]);
 GO
 
-CREATE INDEX [IX_Reservas_MoradorId] ON [Reservas] ([MoradorId]);
+CREATE INDEX [IX_Reservas_PessoaId] ON [Reservas] ([PessoaId]);
 GO
 
 CREATE INDEX [IX_Sindicos_CondominioId] ON [Sindicos] ([CondominioId]);

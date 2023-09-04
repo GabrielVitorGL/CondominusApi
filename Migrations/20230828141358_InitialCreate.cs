@@ -85,7 +85,7 @@ namespace CondominusApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Moradores",
+                name: "Pessoas",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -98,9 +98,9 @@ namespace CondominusApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Moradores", x => x.Id);
+                    table.PrimaryKey("PK_Pessoas", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Moradores_Apartamentos_ApartamentoId",
+                        name: "FK_Pessoas_Apartamentos_ApartamentoId",
                         column: x => x.ApartamentoId,
                         principalTable: "Apartamentos",
                         principalColumn: "Id");
@@ -115,16 +115,16 @@ namespace CondominusApi.Migrations
                     Remetente = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DataEntrega = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataRetirada = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    MoradorId = table.Column<int>(type: "int", nullable: true),
-                    IdMorador = table.Column<int>(type: "int", nullable: false)
+                    PessoaId = table.Column<int>(type: "int", nullable: true),
+                    IdPessoa = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Entregas", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Entregas_Moradores_MoradorId",
-                        column: x => x.MoradorId,
-                        principalTable: "Moradores",
+                        name: "FK_Entregas_Pessoas_PessoaId",
+                        column: x => x.PessoaId,
+                        principalTable: "Pessoas",
                         principalColumn: "Id");
                 });
 
@@ -135,8 +135,8 @@ namespace CondominusApi.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DataReserva = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    MoradorId = table.Column<int>(type: "int", nullable: true),
-                    IdMorador = table.Column<int>(type: "int", nullable: false),
+                    PessoaId = table.Column<int>(type: "int", nullable: true),
+                    IdPessoa = table.Column<int>(type: "int", nullable: false),
                     AreaComumId = table.Column<int>(type: "int", nullable: true),
                     IdAreaComum = table.Column<int>(type: "int", nullable: false)
                 },
@@ -149,9 +149,9 @@ namespace CondominusApi.Migrations
                         principalTable: "AreasComuns",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Reservas_Moradores_MoradorId",
-                        column: x => x.MoradorId,
-                        principalTable: "Moradores",
+                        name: "FK_Reservas_Pessoas_PessoaId",
+                        column: x => x.PessoaId,
+                        principalTable: "Pessoas",
                         principalColumn: "Id");
                 });
 
@@ -190,7 +190,7 @@ namespace CondominusApi.Migrations
 
             migrationBuilder.InsertData(
                 table: "Entregas",
-                columns: new[] { "Id", "DataEntrega", "DataRetirada", "IdMorador", "MoradorId", "Remetente" },
+                columns: new[] { "Id", "DataEntrega", "DataRetirada", "IdPessoa", "PessoaId", "Remetente" },
                 values: new object[,]
                 {
                     { 1, new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3535), new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3546), 0, null, "Sorriso Maroto" },
@@ -200,7 +200,7 @@ namespace CondominusApi.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Moradores",
+                table: "Pessoas",
                 columns: new[] { "Id", "ApartamentoId", "Cpf", "IdApartamento", "Nome", "Telefone" },
                 values: new object[,]
                 {
@@ -212,7 +212,7 @@ namespace CondominusApi.Migrations
 
             migrationBuilder.InsertData(
                 table: "Reservas",
-                columns: new[] { "Id", "AreaComumId", "DataReserva", "IdAreaComum", "IdMorador", "MoradorId" },
+                columns: new[] { "Id", "AreaComumId", "DataReserva", "IdAreaComum", "IdPessoa", "PessoaId" },
                 values: new object[,]
                 {
                     { 1, null, new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3600), 0, 0, null },
@@ -232,13 +232,13 @@ namespace CondominusApi.Migrations
                 column: "CondominioId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Entregas_MoradorId",
+                name: "IX_Entregas_PessoaId",
                 table: "Entregas",
-                column: "MoradorId");
+                column: "PessoaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Moradores_ApartamentoId",
-                table: "Moradores",
+                name: "IX_Pessoas_ApartamentoId",
+                table: "Pessoas",
                 column: "ApartamentoId");
 
             migrationBuilder.CreateIndex(
@@ -247,9 +247,9 @@ namespace CondominusApi.Migrations
                 column: "AreaComumId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservas_MoradorId",
+                name: "IX_Reservas_PessoaId",
                 table: "Reservas",
-                column: "MoradorId");
+                column: "PessoaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Sindicos_CondominioId",
@@ -273,7 +273,7 @@ namespace CondominusApi.Migrations
                 name: "AreasComuns");
 
             migrationBuilder.DropTable(
-                name: "Moradores");
+                name: "Pessoas");
 
             migrationBuilder.DropTable(
                 name: "Apartamentos");

@@ -10,22 +10,22 @@ namespace CondominusApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class SindicoController : ControllerBase
+    public class PessoaController : ControllerBase
     {
         private readonly DataContext _context; 
 
-        public SindicoController(DataContext context)
+        public PessoaController(DataContext context)
         {
             _context = context;
-        }
-        
+        } 
+
         [HttpGet("GetAll")]
         public async Task<IActionResult> ListarAsync()
         {
             try
             {
-                List<Sindico> sindicos = await _context.Sindicos.ToListAsync();                
-                return Ok(sindicos);
+                List<Pessoa> pessoas = await _context.Pessoas.ToListAsync();                
+                return Ok(pessoas);
             }
             catch (System.Exception ex)
             {
@@ -34,14 +34,14 @@ namespace CondominusApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(Sindico novoSindico)
+        public async Task<IActionResult> Add(Pessoa novoPessoa)
         {
             try
             {
-                await _context.Sindicos.AddAsync(novoSindico);
+                await _context.Pessoas.AddAsync(novoPessoa);
                 await _context.SaveChangesAsync();
 
-                return Ok(novoSindico.Id);
+                return Ok(novoPessoa.Id);
             }
             catch (System.Exception ex)
             {
