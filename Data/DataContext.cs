@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using CondominusApi.Models;
 using CondominusApi.Data;
 using System.Data;
+using CondominusApi.Utils;
 
 namespace CondominusApi.Data
 {
@@ -22,7 +23,7 @@ namespace CondominusApi.Data
         public DbSet<Entrega> Entregas { get; set; }
         public DbSet<Pessoa> Pessoas { get; set; }
         public DbSet<Reserva> Reservas { get; set; }
-        public DbSet<Sindico> Sindicos { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -62,8 +63,29 @@ namespace CondominusApi.Data
                 new Reserva(){ Id = 3, DataReserva = DateTime.Now},
                 new Reserva(){ Id = 4, DataReserva = DateTime.Now}
             );
-            modelBuilder.Entity<Sindico>().HasData(
-                new Sindico(){ Id = 1, Cpf = "12345678900", Nome = "Eliane Marion", Telefone = "11925874613" }
+
+            Usuario user = new Usuario();     
+            Criptografia.CriarPasswordHash("123456", out byte[] hash, out byte[] salt);
+            Criptografia.CriarPasswordHash("654321", out byte[] hashJ, out byte[] saltJ);
+
+            user.Id = 1;
+            user.Nome = "UsuarioAdmin";            
+            user.Perfil = "Admin";
+            user.Email = "seuEmail@gmail.com";
+            user.PasswordHash = hash;
+            user.PasswordSalt = salt;
+            user.PasswordString = string.Empty;
+            user.Apartamentos = null;
+
+            modelBuilder.Entity<Usuario>().HasData(user);            
+            //Fim da criação do usuário padrão.
+
+            modelBuilder.Entity<Usuario>().HasData
+            (
+                new Usuario() { Id = 3, Nome = "UsuarioSindico", Perfil = "Sindico", Email = "email@gmail.com", 
+                PasswordHash = hash, PasswordSalt = salt, PasswordString = null, Apartamentos = null },
+                new Usuario() { Id = 4, Nome = "UsuarioMorador", Perfil = "Morador", Email = "email@gmail.com", 
+                PasswordHash = hash, PasswordSalt = salt, PasswordString = null, Apartamentos = null }
             );
         }
     }

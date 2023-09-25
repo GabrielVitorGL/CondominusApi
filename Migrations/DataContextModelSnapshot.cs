@@ -39,12 +39,20 @@ namespace CondominusApi.Migrations
                     b.Property<string>("Numero")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Telefone")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UsuarioId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CondominioId");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Apartamentos");
 
@@ -91,6 +99,9 @@ namespace CondominusApi.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Nome")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -202,32 +213,32 @@ namespace CondominusApi.Migrations
                         new
                         {
                             Id = 1,
-                            DataEntrega = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3535),
-                            DataRetirada = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3546),
+                            DataEntrega = new DateTime(2023, 9, 23, 12, 35, 48, 541, DateTimeKind.Local).AddTicks(976),
+                            DataRetirada = new DateTime(2023, 9, 23, 12, 35, 48, 541, DateTimeKind.Local).AddTicks(987),
                             IdPessoa = 0,
                             Remetente = "Sorriso Maroto"
                         },
                         new
                         {
                             Id = 2,
-                            DataEntrega = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3547),
-                            DataRetirada = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3547),
+                            DataEntrega = new DateTime(2023, 9, 23, 12, 35, 48, 541, DateTimeKind.Local).AddTicks(988),
+                            DataRetirada = new DateTime(2023, 9, 23, 12, 35, 48, 541, DateTimeKind.Local).AddTicks(989),
                             IdPessoa = 0,
                             Remetente = "Marilia Mendonça"
                         },
                         new
                         {
                             Id = 3,
-                            DataEntrega = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3548),
-                            DataRetirada = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3549),
+                            DataEntrega = new DateTime(2023, 9, 23, 12, 35, 48, 541, DateTimeKind.Local).AddTicks(990),
+                            DataRetirada = new DateTime(2023, 9, 23, 12, 35, 48, 541, DateTimeKind.Local).AddTicks(990),
                             IdPessoa = 0,
                             Remetente = "Paola Oliveira"
                         },
                         new
                         {
                             Id = 4,
-                            DataEntrega = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3550),
-                            DataRetirada = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3550),
+                            DataEntrega = new DateTime(2023, 9, 23, 12, 35, 48, 541, DateTimeKind.Local).AddTicks(991),
+                            DataRetirada = new DateTime(2023, 9, 23, 12, 35, 48, 541, DateTimeKind.Local).AddTicks(992),
                             IdPessoa = 0,
                             Remetente = "João Gomes"
                         });
@@ -244,13 +255,25 @@ namespace CondominusApi.Migrations
                     b.Property<int?>("ApartamentoId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CondominioId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Cpf")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("IdApartamento")
                         .HasColumnType("int");
 
+                    b.Property<int>("IdCondominio")
+                        .HasColumnType("int");
+
                     b.Property<string>("Nome")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Perfil")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Telefone")
@@ -260,6 +283,8 @@ namespace CondominusApi.Migrations
 
                     b.HasIndex("ApartamentoId");
 
+                    b.HasIndex("CondominioId");
+
                     b.ToTable("Pessoas");
 
                     b.HasData(
@@ -268,6 +293,7 @@ namespace CondominusApi.Migrations
                             Id = 1,
                             Cpf = "56751898901",
                             IdApartamento = 0,
+                            IdCondominio = 0,
                             Nome = "João Gomes",
                             Telefone = "11924316523"
                         },
@@ -276,6 +302,7 @@ namespace CondominusApi.Migrations
                             Id = 2,
                             Cpf = "63158658205",
                             IdApartamento = 0,
+                            IdCondominio = 0,
                             Nome = "Paola Oliveira",
                             Telefone = "11975231678"
                         },
@@ -284,6 +311,7 @@ namespace CondominusApi.Migrations
                             Id = 3,
                             Cpf = "27458823908",
                             IdApartamento = 0,
+                            IdCondominio = 0,
                             Nome = "Marilia Mendonça",
                             Telefone = "11937512056"
                         },
@@ -292,6 +320,7 @@ namespace CondominusApi.Migrations
                             Id = 4,
                             Cpf = "32152898910",
                             IdApartamento = 0,
+                            IdCondominio = 0,
                             Nome = "Sorriso Maroto",
                             Telefone = "11987618735"
                         });
@@ -320,6 +349,9 @@ namespace CondominusApi.Migrations
                     b.Property<int?>("PessoaId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AreaComumId");
@@ -332,34 +364,34 @@ namespace CondominusApi.Migrations
                         new
                         {
                             Id = 1,
-                            DataReserva = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3600),
+                            DataReserva = new DateTime(2023, 9, 23, 12, 35, 48, 541, DateTimeKind.Local).AddTicks(1025),
                             IdAreaComum = 0,
                             IdPessoa = 0
                         },
                         new
                         {
                             Id = 2,
-                            DataReserva = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3601),
+                            DataReserva = new DateTime(2023, 9, 23, 12, 35, 48, 541, DateTimeKind.Local).AddTicks(1026),
                             IdAreaComum = 0,
                             IdPessoa = 0
                         },
                         new
                         {
                             Id = 3,
-                            DataReserva = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3602),
+                            DataReserva = new DateTime(2023, 9, 23, 12, 35, 48, 541, DateTimeKind.Local).AddTicks(1027),
                             IdAreaComum = 0,
                             IdPessoa = 0
                         },
                         new
                         {
                             Id = 4,
-                            DataReserva = new DateTime(2023, 8, 28, 11, 13, 57, 917, DateTimeKind.Local).AddTicks(3602),
+                            DataReserva = new DateTime(2023, 9, 23, 12, 35, 48, 541, DateTimeKind.Local).AddTicks(1028),
                             IdAreaComum = 0,
                             IdPessoa = 0
                         });
                 });
 
-            modelBuilder.Entity("CondominusApi.Models.Sindico", b =>
+            modelBuilder.Entity("CondominusApi.Models.Usuario", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -367,35 +399,55 @@ namespace CondominusApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CondominioId")
-                        .HasColumnType("int");
+                    b.Property<DateTime?>("DataAcesso")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("Cpf")
+                    b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("IdCondominio")
-                        .HasColumnType("int");
 
                     b.Property<string>("Nome")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Telefone")
+                    b.Property<byte[]>("PasswordHash")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("Perfil")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CondominioId");
-
-                    b.ToTable("Sindicos");
+                    b.ToTable("Usuarios");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            Cpf = "12345678900",
-                            IdCondominio = 0,
-                            Nome = "Eliane Marion",
-                            Telefone = "11925874613"
+                            Email = "seuEmail@gmail.com",
+                            Nome = "UsuarioAdmin",
+                            PasswordHash = new byte[] { 157, 142, 237, 117, 236, 151, 56, 133, 167, 218, 252, 90, 28, 217, 229, 122, 210, 204, 148, 144, 117, 248, 206, 208, 10, 12, 172, 52, 115, 235, 91, 135, 13, 118, 30, 239, 116, 159, 242, 57, 253, 140, 16, 141, 72, 135, 76, 47, 87, 251, 63, 26, 125, 193, 168, 29, 154, 216, 206, 72, 46, 205, 80, 76 },
+                            PasswordSalt = new byte[] { 89, 151, 151, 250, 180, 108, 212, 72, 124, 202, 251, 253, 165, 247, 4, 173, 47, 83, 106, 193, 214, 183, 116, 252, 213, 173, 37, 154, 123, 24, 191, 160, 134, 12, 74, 14, 153, 225, 109, 119, 53, 80, 22, 129, 136, 3, 169, 86, 74, 134, 222, 249, 71, 231, 94, 41, 252, 243, 46, 163, 174, 226, 43, 195, 89, 148, 165, 160, 89, 21, 29, 255, 173, 183, 207, 104, 161, 2, 164, 236, 12, 153, 153, 204, 122, 16, 42, 86, 232, 2, 149, 69, 59, 20, 132, 41, 183, 65, 219, 190, 59, 205, 103, 91, 53, 32, 201, 203, 101, 254, 28, 165, 228, 186, 218, 205, 244, 96, 229, 249, 218, 236, 160, 41, 189, 203, 236, 12 },
+                            Perfil = "Admin"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Email = "email@gmail.com",
+                            Nome = "UsuarioSindico",
+                            PasswordHash = new byte[] { 157, 142, 237, 117, 236, 151, 56, 133, 167, 218, 252, 90, 28, 217, 229, 122, 210, 204, 148, 144, 117, 248, 206, 208, 10, 12, 172, 52, 115, 235, 91, 135, 13, 118, 30, 239, 116, 159, 242, 57, 253, 140, 16, 141, 72, 135, 76, 47, 87, 251, 63, 26, 125, 193, 168, 29, 154, 216, 206, 72, 46, 205, 80, 76 },
+                            PasswordSalt = new byte[] { 89, 151, 151, 250, 180, 108, 212, 72, 124, 202, 251, 253, 165, 247, 4, 173, 47, 83, 106, 193, 214, 183, 116, 252, 213, 173, 37, 154, 123, 24, 191, 160, 134, 12, 74, 14, 153, 225, 109, 119, 53, 80, 22, 129, 136, 3, 169, 86, 74, 134, 222, 249, 71, 231, 94, 41, 252, 243, 46, 163, 174, 226, 43, 195, 89, 148, 165, 160, 89, 21, 29, 255, 173, 183, 207, 104, 161, 2, 164, 236, 12, 153, 153, 204, 122, 16, 42, 86, 232, 2, 149, 69, 59, 20, 132, 41, 183, 65, 219, 190, 59, 205, 103, 91, 53, 32, 201, 203, 101, 254, 28, 165, 228, 186, 218, 205, 244, 96, 229, 249, 218, 236, 160, 41, 189, 203, 236, 12 },
+                            Perfil = "Sindico"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Email = "email@gmail.com",
+                            Nome = "UsuarioMorador",
+                            PasswordHash = new byte[] { 157, 142, 237, 117, 236, 151, 56, 133, 167, 218, 252, 90, 28, 217, 229, 122, 210, 204, 148, 144, 117, 248, 206, 208, 10, 12, 172, 52, 115, 235, 91, 135, 13, 118, 30, 239, 116, 159, 242, 57, 253, 140, 16, 141, 72, 135, 76, 47, 87, 251, 63, 26, 125, 193, 168, 29, 154, 216, 206, 72, 46, 205, 80, 76 },
+                            PasswordSalt = new byte[] { 89, 151, 151, 250, 180, 108, 212, 72, 124, 202, 251, 253, 165, 247, 4, 173, 47, 83, 106, 193, 214, 183, 116, 252, 213, 173, 37, 154, 123, 24, 191, 160, 134, 12, 74, 14, 153, 225, 109, 119, 53, 80, 22, 129, 136, 3, 169, 86, 74, 134, 222, 249, 71, 231, 94, 41, 252, 243, 46, 163, 174, 226, 43, 195, 89, 148, 165, 160, 89, 21, 29, 255, 173, 183, 207, 104, 161, 2, 164, 236, 12, 153, 153, 204, 122, 16, 42, 86, 232, 2, 149, 69, 59, 20, 132, 41, 183, 65, 219, 190, 59, 205, 103, 91, 53, 32, 201, 203, 101, 254, 28, 165, 228, 186, 218, 205, 244, 96, 229, 249, 218, 236, 160, 41, 189, 203, 236, 12 },
+                            Perfil = "Morador"
                         });
                 });
 
@@ -404,6 +456,10 @@ namespace CondominusApi.Migrations
                     b.HasOne("CondominusApi.Models.Condominio", "Condominio")
                         .WithMany()
                         .HasForeignKey("CondominioId");
+
+                    b.HasOne("CondominusApi.Models.Usuario", null)
+                        .WithMany("Apartamentos")
+                        .HasForeignKey("UsuarioId");
 
                     b.Navigation("Condominio");
                 });
@@ -423,7 +479,13 @@ namespace CondominusApi.Migrations
                         .WithMany()
                         .HasForeignKey("ApartamentoId");
 
+                    b.HasOne("CondominusApi.Models.Condominio", "Condominio")
+                        .WithMany()
+                        .HasForeignKey("CondominioId");
+
                     b.Navigation("Apartamento");
+
+                    b.Navigation("Condominio");
                 });
 
             modelBuilder.Entity("CondominusApi.Models.Reserva", b =>
@@ -441,13 +503,9 @@ namespace CondominusApi.Migrations
                     b.Navigation("Pessoa");
                 });
 
-            modelBuilder.Entity("CondominusApi.Models.Sindico", b =>
+            modelBuilder.Entity("CondominusApi.Models.Usuario", b =>
                 {
-                    b.HasOne("CondominusApi.Models.Condominio", "Condominio")
-                        .WithMany()
-                        .HasForeignKey("CondominioId");
-
-                    b.Navigation("Condominio");
+                    b.Navigation("Apartamentos");
                 });
 #pragma warning restore 612, 618
         }
