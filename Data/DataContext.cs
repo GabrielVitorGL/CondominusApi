@@ -19,6 +19,7 @@ namespace CondominusApi.Data
         }
         public DbSet<Apartamento> Apartamentos { get; set; }
         public DbSet<AreaComum> AreasComuns { get; set; }
+        public DbSet<Aviso> Avisos { get; set; }
         public DbSet<Condominio> Condominios { get; set; }
         public DbSet<Entrega> Entregas { get; set; }
         public DbSet<Pessoa> Pessoas { get; set; }

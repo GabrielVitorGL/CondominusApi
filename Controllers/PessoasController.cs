@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-// using System.Collections.Generic;
-// using System.Linq;
-// using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using CondominusApi.Data;
 using CondominusApi.Models;
 using Microsoft.EntityFrameworkCore;
@@ -21,13 +21,46 @@ namespace CondominusApi.Controllers
             _context = context;
         } 
 
+        //listagem geral de pessoas
         [HttpGet("GetAll")]
         public async Task<IActionResult> ListarAsync()
         {
             try
             {
-                List<Pessoa> pessoas = await _context.Pessoas.ToListAsync();                
+                List<Pessoa> pessoas = await _context.Pessoas.ToListAsync();
                 return Ok(pessoas);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //listagem de pessoas com tipo morador
+        [HttpGet("GetMoradores")]
+        public async Task<IActionResult> ListarMoradoresAsync()
+        {
+            try
+            {
+                List<Pessoa> pessoas = await _context.Pessoas.ToListAsync();           
+                List<Pessoa> moradores = pessoas.Where(p => p.Perfil == "Morador").ToList();                
+                return Ok(moradores);     
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //listagem de pessoas com tipo sindico
+        [HttpGet("GetSindicos")]
+        public async Task<IActionResult> ListarMoradoresAsync()
+        {
+            try
+            {
+                List<Pessoa> pessoas = await _context.Pessoas.ToListAsync();           
+                List<Pessoa> sindicos = pessoas.Where(p => p.Perfil == "Sindico").ToList();                
+                return Ok(sindicos);     
             }
             catch (System.Exception ex)
             {
