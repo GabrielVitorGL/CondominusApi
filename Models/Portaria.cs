@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace CondominusApi.Models
 {
-    public class AreaComum
+    public class Portaria
     {
         public int Id { get; set; }
-        public int Capacidade { get; set; }
-        public string Nome { get; set; }
+        public List<Entrega> Entregas { get; set; }
     }
 }

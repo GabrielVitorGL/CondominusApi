@@ -43,7 +43,7 @@ namespace CondominusApi.Controllers
             try
             {
                 List<Pessoa> pessoas = await _context.Pessoas.ToListAsync();           
-                List<Pessoa> moradores = pessoas.Where(p => p.Perfil == "Morador").ToList();                
+                List<Pessoa> moradores = pessoas.Where(p => p.Tipo == "Morador").ToList();                
                 return Ok(moradores);     
             }
             catch (System.Exception ex)
@@ -54,12 +54,12 @@ namespace CondominusApi.Controllers
 
         //listagem de pessoas com tipo sindico
         [HttpGet("GetSindicos")]
-        public async Task<IActionResult> ListarMoradoresAsync()
+        public async Task<IActionResult> ListarSindicosAsync()
         {
             try
             {
                 List<Pessoa> pessoas = await _context.Pessoas.ToListAsync();           
-                List<Pessoa> sindicos = pessoas.Where(p => p.Perfil == "Sindico").ToList();                
+                List<Pessoa> sindicos = pessoas.Where(p => p.Tipo == "Sindico").ToList();                
                 return Ok(sindicos);     
             }
             catch (System.Exception ex)

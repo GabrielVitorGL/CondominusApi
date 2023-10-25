@@ -10,7 +10,6 @@ namespace CondominusApi.Models
         public int Id { get; set; }
         public string Telefone { get; set; }
         public string Numero { get; set; }
-        public string Status { get; set; } // Alterar para enum
         public Condominio Condominio { get; set; }
         public int IdCondominio { get; set; }
     }

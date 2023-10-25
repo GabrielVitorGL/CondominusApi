@@ -18,11 +18,14 @@ namespace CondominusApi.Data
 
         }
         public DbSet<Apartamento> Apartamentos { get; set; }
+        public DbSet<ApartPessoa> ApartPessoas { get; set; }
         public DbSet<AreaComum> AreasComuns { get; set; }
         public DbSet<Aviso> Avisos { get; set; }
         public DbSet<Condominio> Condominios { get; set; }
+        public DbSet<Dependente> Dependentes { get; set; }
         public DbSet<Entrega> Entregas { get; set; }
         public DbSet<Pessoa> Pessoas { get; set; }
+        public DbSet<Portaria> Portarias { get; set; }
         public DbSet<Reserva> Reservas { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
 
@@ -59,10 +62,10 @@ namespace CondominusApi.Data
                 new Pessoa(){ Id = 4, Nome = "Sorriso Maroto", Cpf = "32152898910", Telefone = "11987618735"}
             );
             modelBuilder.Entity<Reserva>().HasData(
-                new Reserva(){ Id = 1, DataReserva = DateTime.Now},
-                new Reserva(){ Id = 2, DataReserva = DateTime.Now},
-                new Reserva(){ Id = 3, DataReserva = DateTime.Now},
-                new Reserva(){ Id = 4, DataReserva = DateTime.Now}
+                new Reserva(){ Id = 1},
+                new Reserva(){ Id = 2},
+                new Reserva(){ Id = 3},
+                new Reserva(){ Id = 4}
             );
 
             Usuario user = new Usuario();     

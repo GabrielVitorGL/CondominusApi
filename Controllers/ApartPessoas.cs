@@ -9,14 +9,14 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CondominusApi.Controllers
 {
-    [Authorize(Roles = "Admin, Sindico, Morador")]
+    [Authorize(Roles = "Admin, Sindico")]
     [ApiController]
     [Route("[controller]")]
-    public class AvisosController : ControllerBase
+    public class ApartPessoasController : ControllerBase
     {
         private readonly DataContext _context; 
 
-        public AvisosController(DataContext context)
+        public ApartPessoasController(DataContext context)
         {
             _context = context;
         }
@@ -26,8 +26,8 @@ namespace CondominusApi.Controllers
         {
             try
             {
-                List<Aviso> avisos = await _context.Avisos.ToListAsync();                
-                return Ok(avisos);
+                List<ApartPessoa> apartPessoas = await _context.ApartPessoas.ToListAsync();                
+                return Ok(apartPessoas);
             }
             catch (System.Exception ex)
             {
@@ -36,14 +36,14 @@ namespace CondominusApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(Aviso novoAviso)
+        public async Task<IActionResult> Add(ApartPessoa novoApartPessoa)
         {
             try
             {
-                await _context.Avisos.AddAsync(novoAviso);
+                await _context.ApartPessoas.AddAsync(novoApartPessoa);
                 await _context.SaveChangesAsync();
 
-                return Ok(novoAviso.Id);
+                return Ok(novoApartPessoa.Id);
             }
             catch (System.Exception ex)
             {
@@ -51,5 +51,4 @@ namespace CondominusApi.Controllers
             }
         }
     }
-
 }

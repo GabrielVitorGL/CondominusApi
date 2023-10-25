@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace CondominusApi.Models
 {
-    public class Pessoa
+    public class Dependente
     {
         public int Id { get; set; }
         public string Nome { get; set; }
         public string Tipo { get; set; }
         public string Telefone { get; set; }
-        public string Cpf { get; set; }
-        public List<Dependente> Dependentes { get; set; }
+        public Pessoa Pessoa { get; set; }
+        public int IdPessoa { get; set; }
     }
 }

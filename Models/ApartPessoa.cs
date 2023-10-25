@@ -5,12 +5,11 @@ using System.Threading.Tasks;
 
 namespace CondominusApi.Models
 {
-    public class Aviso
+    public class ApartPessoa
     {
         public int Id { get; set; }
-        public string Assunto { get; set; }
-        public string Mensagem { get; set; }
-        public DateTime DataEnvio { get; set; }
+        public Apartamento Apartamento { get; set; }
+        public int IdApartamento { get; set; }
         public Pessoa Pessoa { get; set; }
         public int IdPessoa { get; set; }
     }

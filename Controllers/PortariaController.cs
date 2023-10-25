@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-// using System.Collections.Generic;
-// using System.Linq;
-// using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using CondominusApi.Data;
 using CondominusApi.Models;
 using Microsoft.EntityFrameworkCore;
@@ -9,25 +9,26 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CondominusApi.Controllers
 {
-    [Authorize(Roles = "Admin, Sindico, Morador")]
+    [Authorize(Roles = "Admin, Sindico")]
     [ApiController]
     [Route("[controller]")]
-    public class AvisosController : ControllerBase
+    public class PortariasController : ControllerBase
     {
         private readonly DataContext _context; 
 
-        public AvisosController(DataContext context)
+        public PortariasController(DataContext context)
         {
             _context = context;
-        }
+        } 
 
+        //listagem geral de pessoas
         [HttpGet("GetAll")]
         public async Task<IActionResult> ListarAsync()
         {
             try
             {
-                List<Aviso> avisos = await _context.Avisos.ToListAsync();                
-                return Ok(avisos);
+                List<Portaria> portarias = await _context.Portarias.ToListAsync();
+                return Ok(portarias);
             }
             catch (System.Exception ex)
             {
@@ -36,14 +37,14 @@ namespace CondominusApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(Aviso novoAviso)
+        public async Task<IActionResult> Add(Portaria novaPortaria)
         {
             try
             {
-                await _context.Avisos.AddAsync(novoAviso);
+                await _context.Portarias.AddAsync(novaPortaria);
                 await _context.SaveChangesAsync();
 
-                return Ok(novoAviso.Id);
+                return Ok(novaPortaria.Id);
             }
             catch (System.Exception ex)
             {
@@ -51,5 +52,4 @@ namespace CondominusApi.Controllers
             }
         }
     }
-
 }
