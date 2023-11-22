@@ -9,7 +9,7 @@ namespace CondominusApi.Models
     {
         public int Id { get; set; }
         public string Nome { get; set; }
-        public string Tipo { get; set; }
+        public string Perfil { get; set; }
         public string Telefone { get; set; }
         public string Cpf { get; set; }
         public List<Dependente> Dependentes { get; set; }

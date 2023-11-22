@@ -79,7 +79,7 @@ namespace CondominusApi.Data
             user.PasswordHash = hash;
             user.PasswordSalt = salt;
             user.PasswordString = string.Empty;
-            user.Apartamentos = null;
+            user.IdApartamento = 1;
 
             modelBuilder.Entity<Usuario>().HasData(user);            
             //Fim da criação do usuário padrão.
@@ -87,9 +87,9 @@ namespace CondominusApi.Data
             modelBuilder.Entity<Usuario>().HasData
             (
                 new Usuario() { Id = 3, Nome = "UsuarioSindico", Perfil = "Sindico", Email = "email@gmail.com", 
-                PasswordHash = hash, PasswordSalt = salt, PasswordString = null, Apartamentos = null },
+                PasswordHash = hash, PasswordSalt = salt, PasswordString = null, IdApartamento = 2 },
                 new Usuario() { Id = 4, Nome = "UsuarioMorador", Perfil = "Morador", Email = "email@gmail.com", 
-                PasswordHash = hash, PasswordSalt = salt, PasswordString = null, Apartamentos = null }
+                PasswordHash = hash, PasswordSalt = salt, PasswordString = null, IdApartamento = 3 }
             );
         }
     }

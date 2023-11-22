@@ -90,6 +90,14 @@ namespace CondominusApi.Controllers
             }
             return false;
         }
+        private async Task<bool> ApartamentoExistente(int ap)
+        {
+            if (await _context.Usuarios.AnyAsync(x => x.IdApartamento == ap))
+            {
+                return true;
+            }
+            return false;
+        }
 
         [AllowAnonymous]
         [HttpPost("Registrar")]
@@ -97,8 +105,8 @@ namespace CondominusApi.Controllers
         {
             try
             {
-                if (await UsuarioExistente(user.Nome))
-                    throw new System.Exception("Nome de usuário já existe");
+                if (await UsuarioExistente(user.Email) || await ApartamentoExistente(user.IdApartamento))
+                    throw new System.Exception("E-mail ja cadastrado.");
 
                 Criptografia.CriarPasswordHash(user.PasswordString, out byte[] hash, out byte[] salt);
                 user.PasswordString = string.Empty;
@@ -106,6 +114,12 @@ namespace CondominusApi.Controllers
                 user.PasswordSalt = salt;
                 await _context.Usuarios.AddAsync(user);
                 await _context.SaveChangesAsync();
+
+                Pessoa pessoa = new Pessoa();
+                pessoa.Nome = user.Nome;
+                pessoa.Cpf = user.Cpf;
+                pessoa.Telefone = user.Telefone;
+                pessoa.Perfil = user.Perfil;
 
                 return Ok(user.Id);
             }
@@ -123,7 +137,7 @@ namespace CondominusApi.Controllers
             try
             {
                 Usuario usuario = await _context.Usuarios
-                   .FirstOrDefaultAsync(x => x.Nome.ToLower().Equals(credenciais.Nome.ToLower()));
+                   .FirstOrDefaultAsync(x => x.Email.ToLower().Equals(credenciais.Email.ToLower()));
 
                 if (usuario == null)
                     throw new System.Exception("Usuário não encontrado.");

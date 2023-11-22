@@ -10,7 +10,9 @@ namespace CondominusApi.Models
     {
         public int Id { get; set; }
         public string Nome { get; set; }
-        public string Perfil { get; set; }
+        public string Telefone { get; set; }
+        public string Cpf { get; set; }
+        public string Perfil { get; set; } // Se o usuario é morador ou sindico
         public byte[]? PasswordHash { get; set; }
         public byte[]? PasswordSalt { get; set; }
         public string Email { get; set; }
