@@ -113,13 +113,16 @@ namespace CondominusApi.Controllers
                 user.PasswordHash = hash;
                 user.PasswordSalt = salt;
                 await _context.Usuarios.AddAsync(user);
-                await _context.SaveChangesAsync();
 
-                Pessoa pessoa = new Pessoa();
-                pessoa.Nome = user.Nome;
-                pessoa.Cpf = user.Cpf;
-                pessoa.Telefone = user.Telefone;
-                pessoa.Perfil = user.Perfil;
+                Pessoa pessoa = new Pessoa
+                {
+                    Nome = user.Nome,
+                    Cpf = user.Cpf,
+                    Telefone = user.Telefone,
+                    Perfil = user.Perfil
+                };
+                await _context.Pessoas.AddAsync(pessoa);
+                await _context.SaveChangesAsync();
 
                 return Ok(user.Id);
             }

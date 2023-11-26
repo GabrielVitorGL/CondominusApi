@@ -49,12 +49,6 @@ namespace CondominusApi.Data
                 new Condominio() { Id = 3, Nome = "Condomínio Edifício Antônio Walter Santiago", Endereco = "Rua Paulo Andrighetti, 449"},
                 new Condominio() { Id = 4, Nome = "Condomínio Edifício Veneza", Endereco = "Rua Eugênio de Freitas, 525"}
             );
-            modelBuilder.Entity<Entrega>().HasData(
-                new Entrega(){ Id = 1, Remetente = "Sorriso Maroto", DataEntrega = DateTime.Now, DataRetirada = DateTime.Now },
-                new Entrega(){ Id = 2, Remetente = "Marilia Mendonça", DataEntrega = DateTime.Now, DataRetirada = DateTime.Now },
-                new Entrega(){ Id = 3, Remetente = "Paola Oliveira", DataEntrega = DateTime.Now, DataRetirada = DateTime.Now },
-                new Entrega(){ Id = 4, Remetente = "João Gomes", DataEntrega = DateTime.Now, DataRetirada = DateTime.Now }
-            );
             modelBuilder.Entity<Pessoa>().HasData(
                 new Pessoa(){ Id = 1, Nome = "João Gomes", Cpf = "56751898901", Telefone = "11924316523"},
                 new Pessoa(){ Id = 2, Nome = "Paola Oliveira", Cpf = "63158658205", Telefone = "11975231678"},
