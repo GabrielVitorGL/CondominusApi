@@ -40,6 +40,10 @@ namespace CondominusApi.Controllers
         {
             try
             {
+                Apartamento ap = await _context.Apartamentos 
+                    .FirstOrDefaultAsync(x => x.Id == novaEntrega.IdApartamento);
+
+                novaEntrega.Apartamento = ap;
                 await _context.Entregas.AddAsync(novaEntrega);
                 await _context.SaveChangesAsync();
 

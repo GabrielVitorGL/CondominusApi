@@ -8,10 +8,10 @@ namespace CondominusApi.Models
     public class Entrega
     {
         public int Id { get; set; }
-        public string Remetente { get; set; }
-        public DateTime DataEntrega { get; set; }
-        public DateTime DataRetirada { get; set; }  
-        public Pessoa Pessoa { get; set; }
-        public int IdPessoa { get; set; }      
+        public string Destinatario { get; set; }
+        public DateTime? DataEntrega { get; set; }
+        public DateTime? DataRetirada { get; set; }
+        public Apartamento Apartamento { get; set; }
+        public int IdApartamento { get; set; }      
     }
 }

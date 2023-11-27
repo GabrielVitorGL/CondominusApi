@@ -74,7 +74,23 @@ namespace CondominusApi.Controllers
             try
             {
                 List<Usuario> lista = await _context.Usuarios.ToListAsync();
-                return Ok(lista);
+                List<Usuario> usuariosMoradores = await _context.Usuarios.Where(u => u.Perfil == "Morador").ToListAsync();
+                List<UsuarioDTO> usuariosRetorno = new List<UsuarioDTO>();
+                foreach (Usuario u in usuariosMoradores){
+                    UsuarioDTO usuarioDTO = new UsuarioDTO{
+                        Id = u.Id,
+                        Nome = u.Nome,
+                        Telefone = u.Telefone,
+                        Cpf = u.Cpf,
+                        Perfil = u.Perfil,
+                        Email = u.Email,
+                        DataAcesso = u.DataAcesso,
+                        Apartamento = u.Apartamento,
+                        IdApartamento = u.IdApartamento
+                    };
+                    usuariosRetorno.Add(usuarioDTO);
+                }
+                return Ok(usuariosRetorno);
             }
             catch (System.Exception ex)
             {
@@ -105,21 +121,29 @@ namespace CondominusApi.Controllers
         {
             try
             {
-                if (await UsuarioExistente(user.Email) || await ApartamentoExistente(user.IdApartamento))
-                    throw new System.Exception("E-mail ja cadastrado.");
+                if (await UsuarioExistente(user.Email))
+                    throw new System.Exception("E-mail já cadastrado.");
+                if (await ApartamentoExistente(user.IdApartamento))
+                    throw new System.Exception("Apartamento já cadastrado.");
 
+                Apartamento ap = await _context.Apartamentos 
+                    .FirstOrDefaultAsync(x => x.Id == user.IdApartamento);
+                user.Apartamento = ap;
+                
                 Criptografia.CriarPasswordHash(user.PasswordString, out byte[] hash, out byte[] salt);
                 user.PasswordString = string.Empty;
                 user.PasswordHash = hash;
                 user.PasswordSalt = salt;
                 await _context.Usuarios.AddAsync(user);
-
+                
                 Pessoa pessoa = new Pessoa
                 {
                     Nome = user.Nome,
-                    Cpf = user.Cpf,
+                    Perfil = user.Perfil,
                     Telefone = user.Telefone,
-                    Perfil = user.Perfil
+                    Cpf = user.Cpf,
+                    Apartamento = ap,
+                    IdApartamento = user.IdApartamento
                 };
                 await _context.Pessoas.AddAsync(pessoa);
                 await _context.SaveChangesAsync();
@@ -181,38 +205,21 @@ namespace CondominusApi.Controllers
             }
         }
 
-        [HttpGet("GetByLogin/{login}")]
-        public async Task<IActionResult> GetUsuario(string login)
-        {
-            try
-            {
-                //List exigirá o using System.Collections.Generic
-                Usuario usuario = await _context.Usuarios //Busca o usuário no banco através do login
-                .FirstOrDefaultAsync(x => x.Nome.ToLower() == login.ToLower());
-                return Ok(usuario);
-            }
-            catch (System.Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        //Método para alteração da geolocalização
-        // [HttpPut("AtualizarLocalizacao")]
-        // public async Task<IActionResult> AtualizarLocalizacao(Usuario u)
+        // [HttpPost("DeletarMuitos")]
+        // public async Task<IActionResult> DeletarUsuarios([FromBody] int[] ids)
         // {
         //     try
         //     {
-        //         Usuario usuario = await _context.Usuarios //Busca o usuário no banco através do Id
-        //         .FirstOrDefaultAsync(x => x.Id == u.Id);
-        //         usuario.Latitude = u.Latitude;
-        //         usuario.Longitude = u.Longitude;
-        //         var attach = _context.Attach(usuario);
-        //         attach.Property(x => x.Id).IsModified = false;
-        //         attach.Property(x => x.Latitude).IsModified = true;
-        //         attach.Property(x => x.Longitude).IsModified = true;
-        //         int linhasAfetadas = await _context.SaveChangesAsync(); //Confirma a alteração no banco
-        //         return Ok(linhasAfetadas); //Retorna as linhas afetadas (Geralmente sempre 1 linha msm)
+        //         if (ids.Length < 1)
+        //             throw new Exception("Selecione usuarios");
+
+        //         foreach (int i in ids) {
+        //             Usuario usuarioParaDeletar = await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == i);
+        //             _context.Usuarios.Remove(usuarioParaDeletar);
+        //         }
+                
+        //         int linhaAfetadas = await _context.SaveChangesAsync();
+        //         return Ok(linhaAfetadas);
         //     }
         //     catch (System.Exception ex)
         //     {
@@ -220,15 +227,67 @@ namespace CondominusApi.Controllers
         //     }
         // }
 
-        //Método para alteração do e-mail
-        [HttpPut("AtualizarEmail")]
-        public async Task<IActionResult> AtualizarEmail(Usuario u)
+        [HttpPost("DeletarMuitos")]
+        public async Task<IActionResult> DeletarUsuarios([FromBody] int[] ids)
         {
             try
             {
+                if (ids == null || ids.Length == 0)
+                {
+                    throw new Exception("Selecione usuários para deletar.");
+                }
+
+                // Filtrar apenas IDs válidos e existentes no banco de dados
+                var usuariosParaDeletar = await _context.Usuarios
+                    .Where(u => ids.Contains(u.Id))
+                    .ToListAsync();
+
+                if (usuariosParaDeletar.Count == 0)
+                {
+                    return NotFound("Nenhum usuário encontrado para os IDs fornecidos.");
+                }
+
+                _context.Usuarios.RemoveRange(usuariosParaDeletar);
+                
+                int linhasAfetadas = await _context.SaveChangesAsync();
+                
+                return Ok(linhasAfetadas);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //Método para alteração do e-mail
+        [HttpPut("AtualizarUsuario")]
+        public async Task<IActionResult> AtualizarUsuario(Usuario u)
+        {
+            try
+            {
+                if (await ApartamentoExistente(u.IdApartamento))
+                    throw new System.Exception("Apartamento já cadastrado.");
+
                 Usuario usuario = await _context.Usuarios //Busca o usuário no banco através do Id
-                .FirstOrDefaultAsync(x => x.Id == u.Id);
+                    .FirstOrDefaultAsync(x => x.Id == u.Id);
+                Pessoa pessoa = await _context.Pessoas //Busca o usuário no banco através do Id
+                    .FirstOrDefaultAsync(x => x.Id == u.Id);
+                Apartamento ap = await _context.Apartamentos 
+                    .FirstOrDefaultAsync(x => x.Id == u.IdApartamento);
+
+                usuario.Nome = u.Nome;
+                usuario.Telefone = u.Telefone;
+                usuario.Cpf = u.Cpf;
+                usuario.Apartamento = ap;
+                usuario.IdApartamento = u.IdApartamento;
                 usuario.Email = u.Email;
+
+                pessoa.Telefone = u.Telefone;
+                pessoa.Nome = u.Nome;
+                pessoa.Cpf = u.Cpf;
+                pessoa.Apartamento = ap;
+                pessoa.IdApartamento = u.IdApartamento;
+
                 var attach = _context.Attach(usuario);
                 attach.Property(x => x.Id).IsModified = false;
                 attach.Property(x => x.Email).IsModified = true;
@@ -240,41 +299,5 @@ namespace CondominusApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-        // //Método para alteração da foto
-        // [HttpPut("AtualizarFoto")]
-        // public async Task<IActionResult> AtualizarFoto(Usuario u)
-        // {
-        //     try
-        //     {
-        //         Usuario usuario = await _context.Usuarios
-        //         .FirstOrDefaultAsync(x => x.Id == u.Id);
-        //         usuario.Foto = u.Foto;
-        //         var attach = _context.Attach(usuario);
-        //         attach.Property(x => x.Id).IsModified = false;
-        //         attach.Property(x => x.Foto).IsModified = true;
-        //         int linhasAfetadas = await _context.SaveChangesAsync();
-        //         return Ok(linhasAfetadas);
-        //     }
-        //     catch (System.Exception ex)
-        //     {
-        //         return BadRequest(ex.Message);
-        //     }
-        // }
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }

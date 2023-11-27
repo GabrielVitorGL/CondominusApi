@@ -41,6 +41,10 @@ namespace CondominusApi.Controllers
         {
             try
             {
+                // Pessoa temp = await _context.Pessoas.FirstOrDefaultAsync(p => p.Id.Equals(novoDependente.IdPessoa));
+                // temp.Dependentes.Add(novoDependente);
+                // _context.Pessoas.Update(temp);
+
                 await _context.Dependentes.AddAsync(novoDependente);
                 await _context.SaveChangesAsync();
 

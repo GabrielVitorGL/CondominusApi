@@ -1,2 +1,10 @@
-Criar método adicionar Dependentes em Pessoas
-Vincular registro de Usuario a Pessoa
+1(ok)- Criar método adicionar Dependentes em Pessoas
+2(ok)- Vincular registro de Usuario a Pessoa
+
+3(parcial)- Ajustar visibilidade das controllers
+
+4(ok)- Relacionamentos n pra 1 (Varios Dependentes pra uma Pessoa; Apartamentos pra Condominio; Entregas pra Apartamentos)
+
+5- decidir tela, individual para cada condominio ou um geral para admin
+
+6- tirar portaria

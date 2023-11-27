@@ -12,5 +12,6 @@ namespace CondominusApi.Models
         public string Numero { get; set; }
         public Condominio Condominio { get; set; }
         public int IdCondominio { get; set; }
+        public List<Entrega> Entregas { get; set; }
     }
 }
