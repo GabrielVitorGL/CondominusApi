@@ -25,7 +25,6 @@ namespace CondominusApi.Data
         public DbSet<Dependente> Dependentes { get; set; }
         public DbSet<Entrega> Entregas { get; set; }
         public DbSet<Pessoa> Pessoas { get; set; }
-        public DbSet<Portaria> Portarias { get; set; }
         public DbSet<Reserva> Reservas { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
 
@@ -45,6 +44,19 @@ namespace CondominusApi.Data
             .HasOne(e => e.Apartamento)
             .WithMany(a => a.Entregas)
             .HasForeignKey(e => e.IdApartamento);
+
+            modelBuilder.Entity<ApartPessoa>()
+            .HasKey(pa => new { pa.IdPessoa, pa.IdApartamento });
+
+            modelBuilder.Entity<ApartPessoa>()
+            .HasOne(pa => pa.Pessoa)
+            .WithMany(p => p.Apartamentos)
+            .HasForeignKey(pa => pa.IdPessoa);
+
+            modelBuilder.Entity<ApartPessoa>()
+            .HasOne(pa => pa.Apartamento)
+            .WithMany(a => a.Pessoas)
+            .HasForeignKey(pa => pa.IdApartamento);
 
             modelBuilder.Entity<Condominio>().HasData(
                 new Condominio() { Id = 1, Nome = "Vila Nova Maria", Endereco = "Rua Guaranésia, 1070"},

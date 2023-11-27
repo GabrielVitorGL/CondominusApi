@@ -85,7 +85,7 @@ namespace CondominusApi.Controllers
                         Perfil = u.Perfil,
                         Email = u.Email,
                         DataAcesso = u.DataAcesso,
-                        Apartamento = u.Apartamento,
+                        Apartamentos = u.Apartamentos,
                         IdApartamento = u.IdApartamento
                     };
                     usuariosRetorno.Add(usuarioDTO);
@@ -106,14 +106,6 @@ namespace CondominusApi.Controllers
             }
             return false;
         }
-        private async Task<bool> ApartamentoExistente(int ap)
-        {
-            if (await _context.Usuarios.AnyAsync(x => x.IdApartamento == ap))
-            {
-                return true;
-            }
-            return false;
-        }
 
         [AllowAnonymous]
         [HttpPost("Registrar")]
@@ -123,12 +115,6 @@ namespace CondominusApi.Controllers
             {
                 if (await UsuarioExistente(user.Email))
                     throw new System.Exception("E-mail já cadastrado.");
-                if (await ApartamentoExistente(user.IdApartamento))
-                    throw new System.Exception("Apartamento já cadastrado.");
-
-                Apartamento ap = await _context.Apartamentos 
-                    .FirstOrDefaultAsync(x => x.Id == user.IdApartamento);
-                user.Apartamento = ap;
                 
                 Criptografia.CriarPasswordHash(user.PasswordString, out byte[] hash, out byte[] salt);
                 user.PasswordString = string.Empty;
@@ -142,8 +128,7 @@ namespace CondominusApi.Controllers
                     Perfil = user.Perfil,
                     Telefone = user.Telefone,
                     Cpf = user.Cpf,
-                    Apartamento = ap,
-                    IdApartamento = user.IdApartamento
+                    Apartamentos = user.Apartamentos
                 };
                 await _context.Pessoas.AddAsync(pessoa);
                 await _context.SaveChangesAsync();
@@ -265,28 +250,21 @@ namespace CondominusApi.Controllers
         {
             try
             {
-                if (await ApartamentoExistente(u.IdApartamento))
-                    throw new System.Exception("Apartamento já cadastrado.");
-
                 Usuario usuario = await _context.Usuarios //Busca o usuário no banco através do Id
                     .FirstOrDefaultAsync(x => x.Id == u.Id);
                 Pessoa pessoa = await _context.Pessoas //Busca o usuário no banco através do Id
                     .FirstOrDefaultAsync(x => x.Id == u.Id);
-                Apartamento ap = await _context.Apartamentos 
-                    .FirstOrDefaultAsync(x => x.Id == u.IdApartamento);
-
+                
                 usuario.Nome = u.Nome;
                 usuario.Telefone = u.Telefone;
                 usuario.Cpf = u.Cpf;
-                usuario.Apartamento = ap;
-                usuario.IdApartamento = u.IdApartamento;
+                usuario.Apartamentos = u.Apartamentos;
                 usuario.Email = u.Email;
 
                 pessoa.Telefone = u.Telefone;
                 pessoa.Nome = u.Nome;
                 pessoa.Cpf = u.Cpf;
-                pessoa.Apartamento = ap;
-                pessoa.IdApartamento = u.IdApartamento;
+                pessoa.Apartamentos = u.Apartamentos;
 
                 var attach = _context.Attach(usuario);
                 attach.Property(x => x.Id).IsModified = false;

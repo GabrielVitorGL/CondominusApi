@@ -21,7 +21,7 @@ namespace CondominusApi.Models
         public string Token { get; set; }
         [NotMapped]
         public string PasswordString { get; set; } //using System.ComponentModel.DataAnnotations.Schema;
-        public Apartamento Apartamento {get; set;}
+        public List<ApartPessoa> Apartamentos {get; set;}
         public int IdApartamento {get; set;}
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace CondominusApi.Models
 {
+    [NotMapped]
     public class UsuarioDTO
     {
         public int Id { get; set; }
@@ -15,7 +16,7 @@ namespace CondominusApi.Models
         public string Perfil { get; set; }
         public string Email { get; set; }
         public DateTime? DataAcesso { get; set; }
-        public Apartamento Apartamento {get; set;}
+        public List<ApartPessoa> Apartamentos {get; set;}
         public int IdApartamento {get; set;}
     }
 }

@@ -13,8 +13,6 @@ namespace CondominusApi.Models
         public string Telefone { get; set; }
         public string Cpf { get; set; }
         public List<Dependente> Dependentes { get; set; }
-        public Apartamento Apartamento {get; set;}
-        public int IdApartamento {get; set;}
-        
+        public List<ApartPessoa> Apartamentos { get; set; }
     }
 }

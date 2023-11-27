@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CondominusApi.Migrations
 {
     /// <inheritdoc />
-    public partial class Added : Migration
+    public partial class Metodos : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -42,15 +42,40 @@ namespace CondominusApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Portarias",
+                name: "Pessoas",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Perfil = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Telefone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Cpf = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Portarias", x => x.Id);
+                    table.PrimaryKey("PK_Pessoas", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Usuarios",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Telefone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Cpf = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Perfil = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DataAcesso = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IdApartamento = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Usuarios", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -72,110 +97,6 @@ namespace CondominusApi.Migrations
                         principalTable: "Condominios",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Entregas",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Destinatario = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DataEntrega = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DataRetirada = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IdApartamento = table.Column<int>(type: "int", nullable: false),
-                    PortariaId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Entregas", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Entregas_Apartamentos_IdApartamento",
-                        column: x => x.IdApartamento,
-                        principalTable: "Apartamentos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Entregas_Portarias_PortariaId",
-                        column: x => x.PortariaId,
-                        principalTable: "Portarias",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Pessoas",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Perfil = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Telefone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Cpf = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ApartamentoId = table.Column<int>(type: "int", nullable: true),
-                    IdApartamento = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Pessoas", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Pessoas_Apartamentos_ApartamentoId",
-                        column: x => x.ApartamentoId,
-                        principalTable: "Apartamentos",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Usuarios",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Telefone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Cpf = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Perfil = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DataAcesso = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ApartamentoId = table.Column<int>(type: "int", nullable: true),
-                    IdApartamento = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Usuarios", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Usuarios_Apartamentos_ApartamentoId",
-                        column: x => x.ApartamentoId,
-                        principalTable: "Apartamentos",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ApartPessoas",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ApartamentoId = table.Column<int>(type: "int", nullable: true),
-                    IdApartamento = table.Column<int>(type: "int", nullable: false),
-                    PessoaId = table.Column<int>(type: "int", nullable: true),
-                    IdPessoa = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ApartPessoas", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ApartPessoas_Apartamentos_ApartamentoId",
-                        column: x => x.ApartamentoId,
-                        principalTable: "Apartamentos",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ApartPessoas_Pessoas_PessoaId",
-                        column: x => x.PessoaId,
-                        principalTable: "Pessoas",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -248,6 +169,59 @@ namespace CondominusApi.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ApartPessoas",
+                columns: table => new
+                {
+                    IdApartamento = table.Column<int>(type: "int", nullable: false),
+                    IdPessoa = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    UsuarioId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApartPessoas", x => new { x.IdPessoa, x.IdApartamento });
+                    table.ForeignKey(
+                        name: "FK_ApartPessoas_Apartamentos_IdApartamento",
+                        column: x => x.IdApartamento,
+                        principalTable: "Apartamentos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ApartPessoas_Pessoas_IdPessoa",
+                        column: x => x.IdPessoa,
+                        principalTable: "Pessoas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ApartPessoas_Usuarios_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuarios",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Entregas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Destinatario = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DataEntrega = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DataRetirada = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IdApartamento = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Entregas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Entregas_Apartamentos_IdApartamento",
+                        column: x => x.IdApartamento,
+                        principalTable: "Apartamentos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "AreasComuns",
                 columns: new[] { "Id", "Capacidade", "Nome" },
@@ -272,13 +246,13 @@ namespace CondominusApi.Migrations
 
             migrationBuilder.InsertData(
                 table: "Pessoas",
-                columns: new[] { "Id", "ApartamentoId", "Cpf", "IdApartamento", "Nome", "Perfil", "Telefone" },
+                columns: new[] { "Id", "Cpf", "Nome", "Perfil", "Telefone" },
                 values: new object[,]
                 {
-                    { 1, null, "56751898901", 0, "João Gomes", null, "11924316523" },
-                    { 2, null, "63158658205", 0, "Paola Oliveira", null, "11975231678" },
-                    { 3, null, "27458823908", 0, "Marilia Mendonça", null, "11937512056" },
-                    { 4, null, "32152898910", 0, "Sorriso Maroto", null, "11987618735" }
+                    { 1, "56751898901", "João Gomes", null, "11924316523" },
+                    { 2, "63158658205", "Paola Oliveira", null, "11975231678" },
+                    { 3, "27458823908", "Marilia Mendonça", null, "11937512056" },
+                    { 4, "32152898910", "Sorriso Maroto", null, "11987618735" }
                 });
 
             migrationBuilder.InsertData(
@@ -294,12 +268,12 @@ namespace CondominusApi.Migrations
 
             migrationBuilder.InsertData(
                 table: "Usuarios",
-                columns: new[] { "Id", "ApartamentoId", "Cpf", "DataAcesso", "Email", "IdApartamento", "Nome", "PasswordHash", "PasswordSalt", "Perfil", "Telefone" },
+                columns: new[] { "Id", "Cpf", "DataAcesso", "Email", "IdApartamento", "Nome", "PasswordHash", "PasswordSalt", "Perfil", "Telefone" },
                 values: new object[,]
                 {
-                    { 1, null, null, null, "admin@gmail.com", 1, "UsuarioAdmin", new byte[] { 59, 181, 203, 66, 98, 231, 208, 217, 117, 219, 70, 237, 92, 65, 145, 6, 22, 104, 194, 168, 52, 227, 35, 253, 44, 208, 63, 122, 143, 196, 179, 128, 65, 228, 125, 116, 19, 213, 90, 191, 132, 13, 2, 54, 159, 174, 49, 183, 158, 252, 146, 16, 234, 178, 83, 186, 212, 12, 93, 233, 94, 78, 38, 60 }, new byte[] { 249, 215, 208, 74, 252, 93, 214, 55, 160, 151, 118, 150, 56, 251, 114, 248, 81, 155, 50, 137, 193, 120, 225, 92, 245, 210, 89, 193, 23, 86, 131, 43, 213, 113, 171, 116, 39, 232, 1, 193, 118, 48, 255, 142, 16, 23, 36, 128, 122, 218, 157, 13, 29, 153, 190, 193, 242, 195, 151, 9, 99, 108, 106, 96, 79, 45, 76, 162, 104, 254, 5, 116, 2, 31, 133, 8, 19, 147, 206, 190, 250, 205, 127, 243, 44, 222, 114, 38, 24, 12, 47, 72, 8, 36, 3, 58, 86, 29, 81, 141, 47, 168, 201, 91, 148, 137, 71, 255, 179, 85, 20, 159, 96, 224, 12, 104, 13, 135, 168, 188, 193, 90, 41, 243, 255, 79, 90, 103 }, "Admin", null },
-                    { 3, null, null, null, "UsuarioSindico@gmail.com", 2, "UsuarioSindico", new byte[] { 59, 181, 203, 66, 98, 231, 208, 217, 117, 219, 70, 237, 92, 65, 145, 6, 22, 104, 194, 168, 52, 227, 35, 253, 44, 208, 63, 122, 143, 196, 179, 128, 65, 228, 125, 116, 19, 213, 90, 191, 132, 13, 2, 54, 159, 174, 49, 183, 158, 252, 146, 16, 234, 178, 83, 186, 212, 12, 93, 233, 94, 78, 38, 60 }, new byte[] { 249, 215, 208, 74, 252, 93, 214, 55, 160, 151, 118, 150, 56, 251, 114, 248, 81, 155, 50, 137, 193, 120, 225, 92, 245, 210, 89, 193, 23, 86, 131, 43, 213, 113, 171, 116, 39, 232, 1, 193, 118, 48, 255, 142, 16, 23, 36, 128, 122, 218, 157, 13, 29, 153, 190, 193, 242, 195, 151, 9, 99, 108, 106, 96, 79, 45, 76, 162, 104, 254, 5, 116, 2, 31, 133, 8, 19, 147, 206, 190, 250, 205, 127, 243, 44, 222, 114, 38, 24, 12, 47, 72, 8, 36, 3, 58, 86, 29, 81, 141, 47, 168, 201, 91, 148, 137, 71, 255, 179, 85, 20, 159, 96, 224, 12, 104, 13, 135, 168, 188, 193, 90, 41, 243, 255, 79, 90, 103 }, "Sindico", null },
-                    { 4, null, null, null, "UsuarioMorador@gmail.com", 3, "UsuarioMorador", new byte[] { 59, 181, 203, 66, 98, 231, 208, 217, 117, 219, 70, 237, 92, 65, 145, 6, 22, 104, 194, 168, 52, 227, 35, 253, 44, 208, 63, 122, 143, 196, 179, 128, 65, 228, 125, 116, 19, 213, 90, 191, 132, 13, 2, 54, 159, 174, 49, 183, 158, 252, 146, 16, 234, 178, 83, 186, 212, 12, 93, 233, 94, 78, 38, 60 }, new byte[] { 249, 215, 208, 74, 252, 93, 214, 55, 160, 151, 118, 150, 56, 251, 114, 248, 81, 155, 50, 137, 193, 120, 225, 92, 245, 210, 89, 193, 23, 86, 131, 43, 213, 113, 171, 116, 39, 232, 1, 193, 118, 48, 255, 142, 16, 23, 36, 128, 122, 218, 157, 13, 29, 153, 190, 193, 242, 195, 151, 9, 99, 108, 106, 96, 79, 45, 76, 162, 104, 254, 5, 116, 2, 31, 133, 8, 19, 147, 206, 190, 250, 205, 127, 243, 44, 222, 114, 38, 24, 12, 47, 72, 8, 36, 3, 58, 86, 29, 81, 141, 47, 168, 201, 91, 148, 137, 71, 255, 179, 85, 20, 159, 96, 224, 12, 104, 13, 135, 168, 188, 193, 90, 41, 243, 255, 79, 90, 103 }, "Morador", null }
+                    { 1, null, null, "admin@gmail.com", 1, "UsuarioAdmin", new byte[] { 123, 86, 211, 111, 73, 218, 39, 44, 171, 229, 182, 183, 199, 126, 50, 135, 19, 78, 148, 157, 31, 142, 226, 196, 172, 253, 11, 106, 52, 50, 227, 99, 109, 252, 185, 224, 20, 18, 203, 176, 48, 181, 80, 116, 210, 195, 236, 208, 254, 170, 239, 120, 61, 205, 88, 138, 161, 198, 113, 55, 200, 143, 139, 175 }, new byte[] { 234, 190, 179, 79, 211, 53, 203, 165, 109, 70, 115, 85, 193, 149, 203, 143, 161, 217, 139, 97, 146, 23, 58, 51, 233, 196, 58, 193, 219, 84, 11, 21, 89, 243, 61, 169, 125, 108, 193, 45, 199, 38, 11, 140, 119, 18, 167, 69, 118, 172, 178, 228, 150, 176, 144, 153, 71, 95, 14, 84, 116, 160, 227, 151, 215, 0, 72, 32, 41, 61, 187, 172, 125, 234, 208, 11, 82, 158, 14, 165, 67, 114, 83, 11, 133, 50, 34, 175, 186, 253, 247, 86, 206, 64, 255, 133, 186, 162, 12, 252, 12, 61, 186, 200, 95, 177, 50, 85, 24, 244, 181, 77, 154, 165, 147, 184, 21, 158, 157, 249, 240, 78, 254, 25, 200, 41, 237, 77 }, "Admin", null },
+                    { 3, null, null, "UsuarioSindico@gmail.com", 2, "UsuarioSindico", new byte[] { 123, 86, 211, 111, 73, 218, 39, 44, 171, 229, 182, 183, 199, 126, 50, 135, 19, 78, 148, 157, 31, 142, 226, 196, 172, 253, 11, 106, 52, 50, 227, 99, 109, 252, 185, 224, 20, 18, 203, 176, 48, 181, 80, 116, 210, 195, 236, 208, 254, 170, 239, 120, 61, 205, 88, 138, 161, 198, 113, 55, 200, 143, 139, 175 }, new byte[] { 234, 190, 179, 79, 211, 53, 203, 165, 109, 70, 115, 85, 193, 149, 203, 143, 161, 217, 139, 97, 146, 23, 58, 51, 233, 196, 58, 193, 219, 84, 11, 21, 89, 243, 61, 169, 125, 108, 193, 45, 199, 38, 11, 140, 119, 18, 167, 69, 118, 172, 178, 228, 150, 176, 144, 153, 71, 95, 14, 84, 116, 160, 227, 151, 215, 0, 72, 32, 41, 61, 187, 172, 125, 234, 208, 11, 82, 158, 14, 165, 67, 114, 83, 11, 133, 50, 34, 175, 186, 253, 247, 86, 206, 64, 255, 133, 186, 162, 12, 252, 12, 61, 186, 200, 95, 177, 50, 85, 24, 244, 181, 77, 154, 165, 147, 184, 21, 158, 157, 249, 240, 78, 254, 25, 200, 41, 237, 77 }, "Sindico", null },
+                    { 4, null, null, "UsuarioMorador@gmail.com", 3, "UsuarioMorador", new byte[] { 123, 86, 211, 111, 73, 218, 39, 44, 171, 229, 182, 183, 199, 126, 50, 135, 19, 78, 148, 157, 31, 142, 226, 196, 172, 253, 11, 106, 52, 50, 227, 99, 109, 252, 185, 224, 20, 18, 203, 176, 48, 181, 80, 116, 210, 195, 236, 208, 254, 170, 239, 120, 61, 205, 88, 138, 161, 198, 113, 55, 200, 143, 139, 175 }, new byte[] { 234, 190, 179, 79, 211, 53, 203, 165, 109, 70, 115, 85, 193, 149, 203, 143, 161, 217, 139, 97, 146, 23, 58, 51, 233, 196, 58, 193, 219, 84, 11, 21, 89, 243, 61, 169, 125, 108, 193, 45, 199, 38, 11, 140, 119, 18, 167, 69, 118, 172, 178, 228, 150, 176, 144, 153, 71, 95, 14, 84, 116, 160, 227, 151, 215, 0, 72, 32, 41, 61, 187, 172, 125, 234, 208, 11, 82, 158, 14, 165, 67, 114, 83, 11, 133, 50, 34, 175, 186, 253, 247, 86, 206, 64, 255, 133, 186, 162, 12, 252, 12, 61, 186, 200, 95, 177, 50, 85, 24, 244, 181, 77, 154, 165, 147, 184, 21, 158, 157, 249, 240, 78, 254, 25, 200, 41, 237, 77 }, "Morador", null }
                 });
 
             migrationBuilder.InsertData(
@@ -327,8 +301,8 @@ namespace CondominusApi.Migrations
 
             migrationBuilder.InsertData(
                 table: "Entregas",
-                columns: new[] { "Id", "DataEntrega", "DataRetirada", "Destinatario", "IdApartamento", "PortariaId" },
-                values: new object[] { 1, null, null, "Joao Guilherme", 1, null });
+                columns: new[] { "Id", "DataEntrega", "DataRetirada", "Destinatario", "IdApartamento" },
+                values: new object[] { 1, null, null, "Joao Guilherme", 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Apartamentos_IdCondominio",
@@ -336,14 +310,14 @@ namespace CondominusApi.Migrations
                 column: "IdCondominio");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ApartPessoas_ApartamentoId",
+                name: "IX_ApartPessoas_IdApartamento",
                 table: "ApartPessoas",
-                column: "ApartamentoId");
+                column: "IdApartamento");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ApartPessoas_PessoaId",
+                name: "IX_ApartPessoas_UsuarioId",
                 table: "ApartPessoas",
-                column: "PessoaId");
+                column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Avisos_PessoaId",
@@ -361,16 +335,6 @@ namespace CondominusApi.Migrations
                 column: "IdApartamento");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Entregas_PortariaId",
-                table: "Entregas",
-                column: "PortariaId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Pessoas_ApartamentoId",
-                table: "Pessoas",
-                column: "ApartamentoId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Reservas_AreaComumId",
                 table: "Reservas",
                 column: "AreaComumId");
@@ -379,11 +343,6 @@ namespace CondominusApi.Migrations
                 name: "IX_Reservas_PessoaId",
                 table: "Reservas",
                 column: "PessoaId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Usuarios_ApartamentoId",
-                table: "Usuarios",
-                column: "ApartamentoId");
         }
 
         /// <inheritdoc />
@@ -408,16 +367,13 @@ namespace CondominusApi.Migrations
                 name: "Usuarios");
 
             migrationBuilder.DropTable(
-                name: "Portarias");
+                name: "Apartamentos");
 
             migrationBuilder.DropTable(
                 name: "AreasComuns");
 
             migrationBuilder.DropTable(
                 name: "Pessoas");
-
-            migrationBuilder.DropTable(
-                name: "Apartamentos");
 
             migrationBuilder.DropTable(
                 name: "Condominios");

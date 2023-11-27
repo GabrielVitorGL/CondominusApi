@@ -111,7 +111,7 @@ namespace CondominusApi.Controllers
                 pessoa.Nome = p.Nome;
                 pessoa.Telefone = p.Telefone;
                 pessoa.Cpf = p.Cpf;
-                pessoa.IdApartamento = p.IdApartamento;
+                //pessoa.IdApartamento = p.IdApartamento;
 
                 var attach = _context.Attach(pessoa);
                 attach.Property(x => x.Id).IsModified = false;
@@ -119,7 +119,7 @@ namespace CondominusApi.Controllers
                 attach.Property(x => x.Perfil).IsModified = false;
                 attach.Property(x => x.Telefone).IsModified = true;
                 attach.Property(x => x.Cpf).IsModified = true;
-                attach.Property(x => x.IdApartamento).IsModified = true;
+                //attach.Property(x => x.IdApartamento).IsModified = true;
                 
                 int linhasAfetadas = await _context.SaveChangesAsync(); //Confirma a alteração no banco
                 return Ok(linhasAfetadas); //Retorna as linhas afetadas (Geralmente sempre 1 linha msm)

@@ -27,45 +27,13 @@ CREATE TABLE [Condominios] (
 );
 GO
 
-CREATE TABLE [Portarias] (
-    [Id] int NOT NULL IDENTITY,
-    CONSTRAINT [PK_Portarias] PRIMARY KEY ([Id])
-);
-GO
-
-CREATE TABLE [Apartamentos] (
-    [Id] int NOT NULL IDENTITY,
-    [Telefone] nvarchar(max) NULL,
-    [Numero] nvarchar(max) NULL,
-    [IdCondominio] int NOT NULL,
-    CONSTRAINT [PK_Apartamentos] PRIMARY KEY ([Id]),
-    CONSTRAINT [FK_Apartamentos_Condominios_IdCondominio] FOREIGN KEY ([IdCondominio]) REFERENCES [Condominios] ([Id]) ON DELETE CASCADE
-);
-GO
-
-CREATE TABLE [Entregas] (
-    [Id] int NOT NULL IDENTITY,
-    [Destinatario] nvarchar(max) NULL,
-    [DataEntrega] datetime2 NULL,
-    [DataRetirada] datetime2 NULL,
-    [IdApartamento] int NOT NULL,
-    [PortariaId] int NULL,
-    CONSTRAINT [PK_Entregas] PRIMARY KEY ([Id]),
-    CONSTRAINT [FK_Entregas_Apartamentos_IdApartamento] FOREIGN KEY ([IdApartamento]) REFERENCES [Apartamentos] ([Id]) ON DELETE CASCADE,
-    CONSTRAINT [FK_Entregas_Portarias_PortariaId] FOREIGN KEY ([PortariaId]) REFERENCES [Portarias] ([Id])
-);
-GO
-
 CREATE TABLE [Pessoas] (
     [Id] int NOT NULL IDENTITY,
     [Nome] nvarchar(max) NULL,
     [Perfil] nvarchar(max) NULL,
     [Telefone] nvarchar(max) NULL,
     [Cpf] nvarchar(max) NULL,
-    [ApartamentoId] int NULL,
-    [IdApartamento] int NOT NULL,
-    CONSTRAINT [PK_Pessoas] PRIMARY KEY ([Id]),
-    CONSTRAINT [FK_Pessoas_Apartamentos_ApartamentoId] FOREIGN KEY ([ApartamentoId]) REFERENCES [Apartamentos] ([Id])
+    CONSTRAINT [PK_Pessoas] PRIMARY KEY ([Id])
 );
 GO
 
@@ -79,22 +47,18 @@ CREATE TABLE [Usuarios] (
     [PasswordSalt] varbinary(max) NULL,
     [Email] nvarchar(max) NULL,
     [DataAcesso] datetime2 NULL,
-    [ApartamentoId] int NULL,
     [IdApartamento] int NOT NULL,
-    CONSTRAINT [PK_Usuarios] PRIMARY KEY ([Id]),
-    CONSTRAINT [FK_Usuarios_Apartamentos_ApartamentoId] FOREIGN KEY ([ApartamentoId]) REFERENCES [Apartamentos] ([Id])
+    CONSTRAINT [PK_Usuarios] PRIMARY KEY ([Id])
 );
 GO
 
-CREATE TABLE [ApartPessoas] (
+CREATE TABLE [Apartamentos] (
     [Id] int NOT NULL IDENTITY,
-    [ApartamentoId] int NULL,
-    [IdApartamento] int NOT NULL,
-    [PessoaId] int NULL,
-    [IdPessoa] int NOT NULL,
-    CONSTRAINT [PK_ApartPessoas] PRIMARY KEY ([Id]),
-    CONSTRAINT [FK_ApartPessoas_Apartamentos_ApartamentoId] FOREIGN KEY ([ApartamentoId]) REFERENCES [Apartamentos] ([Id]),
-    CONSTRAINT [FK_ApartPessoas_Pessoas_PessoaId] FOREIGN KEY ([PessoaId]) REFERENCES [Pessoas] ([Id])
+    [Telefone] nvarchar(max) NULL,
+    [Numero] nvarchar(max) NULL,
+    [IdCondominio] int NOT NULL,
+    CONSTRAINT [PK_Apartamentos] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Apartamentos_Condominios_IdCondominio] FOREIGN KEY ([IdCondominio]) REFERENCES [Condominios] ([Id]) ON DELETE CASCADE
 );
 GO
 
@@ -133,6 +97,29 @@ CREATE TABLE [Reservas] (
 );
 GO
 
+CREATE TABLE [ApartPessoas] (
+    [IdApartamento] int NOT NULL,
+    [IdPessoa] int NOT NULL,
+    [Id] int NOT NULL,
+    [UsuarioId] int NULL,
+    CONSTRAINT [PK_ApartPessoas] PRIMARY KEY ([IdPessoa], [IdApartamento]),
+    CONSTRAINT [FK_ApartPessoas_Apartamentos_IdApartamento] FOREIGN KEY ([IdApartamento]) REFERENCES [Apartamentos] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_ApartPessoas_Pessoas_IdPessoa] FOREIGN KEY ([IdPessoa]) REFERENCES [Pessoas] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_ApartPessoas_Usuarios_UsuarioId] FOREIGN KEY ([UsuarioId]) REFERENCES [Usuarios] ([Id])
+);
+GO
+
+CREATE TABLE [Entregas] (
+    [Id] int NOT NULL IDENTITY,
+    [Destinatario] nvarchar(max) NULL,
+    [DataEntrega] datetime2 NULL,
+    [DataRetirada] datetime2 NULL,
+    [IdApartamento] int NOT NULL,
+    CONSTRAINT [PK_Entregas] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Entregas_Apartamentos_IdApartamento] FOREIGN KEY ([IdApartamento]) REFERENCES [Apartamentos] ([Id]) ON DELETE CASCADE
+);
+GO
+
 IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Capacidade', N'Nome') AND [object_id] = OBJECT_ID(N'[AreasComuns]'))
     SET IDENTITY_INSERT [AreasComuns] ON;
 INSERT INTO [AreasComuns] ([Id], [Capacidade], [Nome])
@@ -155,14 +142,14 @@ IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Ende
     SET IDENTITY_INSERT [Condominios] OFF;
 GO
 
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'ApartamentoId', N'Cpf', N'IdApartamento', N'Nome', N'Perfil', N'Telefone') AND [object_id] = OBJECT_ID(N'[Pessoas]'))
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Cpf', N'Nome', N'Perfil', N'Telefone') AND [object_id] = OBJECT_ID(N'[Pessoas]'))
     SET IDENTITY_INSERT [Pessoas] ON;
-INSERT INTO [Pessoas] ([Id], [ApartamentoId], [Cpf], [IdApartamento], [Nome], [Perfil], [Telefone])
-VALUES (1, NULL, N'56751898901', 0, N'João Gomes', NULL, N'11924316523'),
-(2, NULL, N'63158658205', 0, N'Paola Oliveira', NULL, N'11975231678'),
-(3, NULL, N'27458823908', 0, N'Marilia Mendonça', NULL, N'11937512056'),
-(4, NULL, N'32152898910', 0, N'Sorriso Maroto', NULL, N'11987618735');
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'ApartamentoId', N'Cpf', N'IdApartamento', N'Nome', N'Perfil', N'Telefone') AND [object_id] = OBJECT_ID(N'[Pessoas]'))
+INSERT INTO [Pessoas] ([Id], [Cpf], [Nome], [Perfil], [Telefone])
+VALUES (1, N'56751898901', N'João Gomes', NULL, N'11924316523'),
+(2, N'63158658205', N'Paola Oliveira', NULL, N'11975231678'),
+(3, N'27458823908', N'Marilia Mendonça', NULL, N'11937512056'),
+(4, N'32152898910', N'Sorriso Maroto', NULL, N'11987618735');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Cpf', N'Nome', N'Perfil', N'Telefone') AND [object_id] = OBJECT_ID(N'[Pessoas]'))
     SET IDENTITY_INSERT [Pessoas] OFF;
 GO
 
@@ -177,13 +164,13 @@ IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Area
     SET IDENTITY_INSERT [Reservas] OFF;
 GO
 
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'ApartamentoId', N'Cpf', N'DataAcesso', N'Email', N'IdApartamento', N'Nome', N'PasswordHash', N'PasswordSalt', N'Perfil', N'Telefone') AND [object_id] = OBJECT_ID(N'[Usuarios]'))
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Cpf', N'DataAcesso', N'Email', N'IdApartamento', N'Nome', N'PasswordHash', N'PasswordSalt', N'Perfil', N'Telefone') AND [object_id] = OBJECT_ID(N'[Usuarios]'))
     SET IDENTITY_INSERT [Usuarios] ON;
-INSERT INTO [Usuarios] ([Id], [ApartamentoId], [Cpf], [DataAcesso], [Email], [IdApartamento], [Nome], [PasswordHash], [PasswordSalt], [Perfil], [Telefone])
-VALUES (1, NULL, NULL, NULL, N'admin@gmail.com', 1, N'UsuarioAdmin', 0x3BB5CB4262E7D0D975DB46ED5C4191061668C2A834E323FD2CD03F7A8FC4B38041E47D7413D55ABF840D02369FAE31B79EFC9210EAB253BAD40C5DE95E4E263C, 0xF9D7D04AFC5DD637A097769638FB72F8519B3289C178E15CF5D259C11756832BD571AB7427E801C17630FF8E101724807ADA9D0D1D99BEC1F2C39709636C6A604F2D4CA268FE0574021F85081393CEBEFACD7FF32CDE7226180C2F480824033A561D518D2FA8C95B948947FFB355149F60E00C680D87A8BCC15A29F3FF4F5A67, N'Admin', NULL),
-(3, NULL, NULL, NULL, N'UsuarioSindico@gmail.com', 2, N'UsuarioSindico', 0x3BB5CB4262E7D0D975DB46ED5C4191061668C2A834E323FD2CD03F7A8FC4B38041E47D7413D55ABF840D02369FAE31B79EFC9210EAB253BAD40C5DE95E4E263C, 0xF9D7D04AFC5DD637A097769638FB72F8519B3289C178E15CF5D259C11756832BD571AB7427E801C17630FF8E101724807ADA9D0D1D99BEC1F2C39709636C6A604F2D4CA268FE0574021F85081393CEBEFACD7FF32CDE7226180C2F480824033A561D518D2FA8C95B948947FFB355149F60E00C680D87A8BCC15A29F3FF4F5A67, N'Sindico', NULL),
-(4, NULL, NULL, NULL, N'UsuarioMorador@gmail.com', 3, N'UsuarioMorador', 0x3BB5CB4262E7D0D975DB46ED5C4191061668C2A834E323FD2CD03F7A8FC4B38041E47D7413D55ABF840D02369FAE31B79EFC9210EAB253BAD40C5DE95E4E263C, 0xF9D7D04AFC5DD637A097769638FB72F8519B3289C178E15CF5D259C11756832BD571AB7427E801C17630FF8E101724807ADA9D0D1D99BEC1F2C39709636C6A604F2D4CA268FE0574021F85081393CEBEFACD7FF32CDE7226180C2F480824033A561D518D2FA8C95B948947FFB355149F60E00C680D87A8BCC15A29F3FF4F5A67, N'Morador', NULL);
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'ApartamentoId', N'Cpf', N'DataAcesso', N'Email', N'IdApartamento', N'Nome', N'PasswordHash', N'PasswordSalt', N'Perfil', N'Telefone') AND [object_id] = OBJECT_ID(N'[Usuarios]'))
+INSERT INTO [Usuarios] ([Id], [Cpf], [DataAcesso], [Email], [IdApartamento], [Nome], [PasswordHash], [PasswordSalt], [Perfil], [Telefone])
+VALUES (1, NULL, NULL, N'admin@gmail.com', 1, N'UsuarioAdmin', 0x7B56D36F49DA272CABE5B6B7C77E3287134E949D1F8EE2C4ACFD0B6A3432E3636DFCB9E01412CBB030B55074D2C3ECD0FEAAEF783DCD588AA1C67137C88F8BAF, 0xEABEB34FD335CBA56D467355C195CB8FA1D98B6192173A33E9C43AC1DB540B1559F33DA97D6CC12DC7260B8C7712A74576ACB2E496B09099475F0E5474A0E397D7004820293DBBAC7DEAD00B529E0EA54372530B853222AFBAFDF756CE40FF85BAA20CFC0C3DBAC85FB1325518F4B54D9AA593B8159E9DF9F04EFE19C829ED4D, N'Admin', NULL),
+(3, NULL, NULL, N'UsuarioSindico@gmail.com', 2, N'UsuarioSindico', 0x7B56D36F49DA272CABE5B6B7C77E3287134E949D1F8EE2C4ACFD0B6A3432E3636DFCB9E01412CBB030B55074D2C3ECD0FEAAEF783DCD588AA1C67137C88F8BAF, 0xEABEB34FD335CBA56D467355C195CB8FA1D98B6192173A33E9C43AC1DB540B1559F33DA97D6CC12DC7260B8C7712A74576ACB2E496B09099475F0E5474A0E397D7004820293DBBAC7DEAD00B529E0EA54372530B853222AFBAFDF756CE40FF85BAA20CFC0C3DBAC85FB1325518F4B54D9AA593B8159E9DF9F04EFE19C829ED4D, N'Sindico', NULL),
+(4, NULL, NULL, N'UsuarioMorador@gmail.com', 3, N'UsuarioMorador', 0x7B56D36F49DA272CABE5B6B7C77E3287134E949D1F8EE2C4ACFD0B6A3432E3636DFCB9E01412CBB030B55074D2C3ECD0FEAAEF783DCD588AA1C67137C88F8BAF, 0xEABEB34FD335CBA56D467355C195CB8FA1D98B6192173A33E9C43AC1DB540B1559F33DA97D6CC12DC7260B8C7712A74576ACB2E496B09099475F0E5474A0E397D7004820293DBBAC7DEAD00B529E0EA54372530B853222AFBAFDF756CE40FF85BAA20CFC0C3DBAC85FB1325518F4B54D9AA593B8159E9DF9F04EFE19C829ED4D, N'Morador', NULL);
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Cpf', N'DataAcesso', N'Email', N'IdApartamento', N'Nome', N'PasswordHash', N'PasswordSalt', N'Perfil', N'Telefone') AND [object_id] = OBJECT_ID(N'[Usuarios]'))
     SET IDENTITY_INSERT [Usuarios] OFF;
 GO
 
@@ -210,21 +197,21 @@ IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'IdPe
     SET IDENTITY_INSERT [Dependentes] OFF;
 GO
 
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'DataEntrega', N'DataRetirada', N'Destinatario', N'IdApartamento', N'PortariaId') AND [object_id] = OBJECT_ID(N'[Entregas]'))
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'DataEntrega', N'DataRetirada', N'Destinatario', N'IdApartamento') AND [object_id] = OBJECT_ID(N'[Entregas]'))
     SET IDENTITY_INSERT [Entregas] ON;
-INSERT INTO [Entregas] ([Id], [DataEntrega], [DataRetirada], [Destinatario], [IdApartamento], [PortariaId])
-VALUES (1, NULL, NULL, N'Joao Guilherme', 1, NULL);
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'DataEntrega', N'DataRetirada', N'Destinatario', N'IdApartamento', N'PortariaId') AND [object_id] = OBJECT_ID(N'[Entregas]'))
+INSERT INTO [Entregas] ([Id], [DataEntrega], [DataRetirada], [Destinatario], [IdApartamento])
+VALUES (1, NULL, NULL, N'Joao Guilherme', 1);
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'DataEntrega', N'DataRetirada', N'Destinatario', N'IdApartamento') AND [object_id] = OBJECT_ID(N'[Entregas]'))
     SET IDENTITY_INSERT [Entregas] OFF;
 GO
 
 CREATE INDEX [IX_Apartamentos_IdCondominio] ON [Apartamentos] ([IdCondominio]);
 GO
 
-CREATE INDEX [IX_ApartPessoas_ApartamentoId] ON [ApartPessoas] ([ApartamentoId]);
+CREATE INDEX [IX_ApartPessoas_IdApartamento] ON [ApartPessoas] ([IdApartamento]);
 GO
 
-CREATE INDEX [IX_ApartPessoas_PessoaId] ON [ApartPessoas] ([PessoaId]);
+CREATE INDEX [IX_ApartPessoas_UsuarioId] ON [ApartPessoas] ([UsuarioId]);
 GO
 
 CREATE INDEX [IX_Avisos_PessoaId] ON [Avisos] ([PessoaId]);
@@ -236,23 +223,14 @@ GO
 CREATE INDEX [IX_Entregas_IdApartamento] ON [Entregas] ([IdApartamento]);
 GO
 
-CREATE INDEX [IX_Entregas_PortariaId] ON [Entregas] ([PortariaId]);
-GO
-
-CREATE INDEX [IX_Pessoas_ApartamentoId] ON [Pessoas] ([ApartamentoId]);
-GO
-
 CREATE INDEX [IX_Reservas_AreaComumId] ON [Reservas] ([AreaComumId]);
 GO
 
 CREATE INDEX [IX_Reservas_PessoaId] ON [Reservas] ([PessoaId]);
 GO
 
-CREATE INDEX [IX_Usuarios_ApartamentoId] ON [Usuarios] ([ApartamentoId]);
-GO
-
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20231127025858_Added', N'7.0.4');
+VALUES (N'20231127112319_Metodos', N'7.0.4');
 GO
 
 COMMIT;
