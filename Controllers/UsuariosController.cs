@@ -212,7 +212,7 @@ namespace CondominusApi.Controllers
         //     }
         // }
 
-        [HttpPost("DeletarMuitos")]
+        [HttpDelete("DeletarMuitos")]
         public async Task<IActionResult> DeletarUsuarios([FromBody] int[] ids)
         {
             try
