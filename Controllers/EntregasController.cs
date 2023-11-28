@@ -14,20 +14,44 @@ namespace CondominusApi.Controllers
     [Route("[controller]")]
     public class EntregasController : ControllerBase
     {
-        private readonly DataContext _context; 
+        private readonly DataContext _context;
 
         public EntregasController(DataContext context)
         {
             _context = context;
-        }  
+        }
 
         [HttpGet("GetAll")]
         public async Task<IActionResult> ListarAsync()
         {
             try
             {
-                List<Entrega> entregas = await _context.Entregas.ToListAsync();                
-                return Ok(entregas);
+                List<Entrega> entregas = await _context.Entregas.ToListAsync();
+                List<EntregaComApartamento> entregasComApartamento = new List<EntregaComApartamento>();
+
+                foreach (var entrega in entregas)
+                {
+                    Apartamento ap = await _context.Apartamentos.FirstOrDefaultAsync(x => x.Id == entrega.IdApartamento);
+
+                    if (ap != null)
+                    {
+                        // Cria um novo objeto de entrega com o número do apartamento
+                        EntregaComApartamento entregaComAp = new EntregaComApartamento
+                        {
+                            Id = entrega.Id,
+                            Destinatario = entrega.Destinatario,
+                            DataEntrega = entrega.DataEntrega,
+                            DataRetirada = entrega.DataRetirada,
+                            IdApartamento = entrega.IdApartamento,
+
+                            NumeroApartamento = ap.Numero
+                        };
+
+                        entregasComApartamento.Add(entregaComAp);
+                    }
+                }
+
+                return Ok(entregasComApartamento);
             }
             catch (System.Exception ex)
             {
@@ -40,7 +64,7 @@ namespace CondominusApi.Controllers
         {
             try
             {
-                Apartamento ap = await _context.Apartamentos 
+                Apartamento ap = await _context.Apartamentos
                     .FirstOrDefaultAsync(x => x.Id == novaEntrega.IdApartamento);
 
                 novaEntrega.Apartamento = ap;
