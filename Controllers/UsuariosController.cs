@@ -76,8 +76,10 @@ namespace CondominusApi.Controllers
                 List<Usuario> lista = await _context.Usuarios.ToListAsync();
                 List<Usuario> usuariosMoradores = await _context.Usuarios.Where(u => u.Perfil == "Morador").ToListAsync();
                 List<UsuarioDTO> usuariosRetorno = new List<UsuarioDTO>();
-                foreach (Usuario u in usuariosMoradores){
-                    UsuarioDTO usuarioDTO = new UsuarioDTO{
+                foreach (Usuario u in usuariosMoradores)
+                {
+                    UsuarioDTO usuarioDTO = new UsuarioDTO
+                    {
                         Id = u.Id,
                         Nome = u.Nome,
                         Telefone = u.Telefone,
@@ -115,13 +117,13 @@ namespace CondominusApi.Controllers
             {
                 if (await UsuarioExistente(user.Email))
                     throw new System.Exception("E-mail já cadastrado.");
-                
+
                 Criptografia.CriarPasswordHash(user.PasswordString, out byte[] hash, out byte[] salt);
                 user.PasswordString = string.Empty;
                 user.PasswordHash = hash;
                 user.PasswordSalt = salt;
                 await _context.Usuarios.AddAsync(user);
-                
+
                 Pessoa pessoa = new Pessoa
                 {
                     Nome = user.Nome,
@@ -202,7 +204,7 @@ namespace CondominusApi.Controllers
         //             Usuario usuarioParaDeletar = await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == i);
         //             _context.Usuarios.Remove(usuarioParaDeletar);
         //         }
-                
+
         //         int linhaAfetadas = await _context.SaveChangesAsync();
         //         return Ok(linhaAfetadas);
         //     }
@@ -233,10 +235,30 @@ namespace CondominusApi.Controllers
                 }
 
                 _context.Usuarios.RemoveRange(usuariosParaDeletar);
-                
+
                 int linhasAfetadas = await _context.SaveChangesAsync();
-                
-                return Ok(linhasAfetadas);
+
+                // Após deletar os usuários, recupere a lista atualizada de usuários
+                var listaAtualizada = await _context.Usuarios.ToListAsync();
+
+                List<UsuarioDTO> usuariosRetorno = new List<UsuarioDTO>();
+                foreach (Usuario u in listaAtualizada)
+                {
+                    UsuarioDTO usuarioDTO = new UsuarioDTO
+                    {
+                        Id = u.Id,
+                        Nome = u.Nome,
+                        Telefone = u.Telefone,
+                        Cpf = u.Cpf,
+                        Perfil = u.Perfil,
+                        Email = u.Email,
+                        DataAcesso = u.DataAcesso,
+                        Apartamentos = u.Apartamentos,
+                        IdApartamento = u.IdApartamento
+                    };
+                    usuariosRetorno.Add(usuarioDTO);
+                }
+                return Ok(usuariosRetorno);
             }
             catch (Exception ex)
             {
@@ -254,7 +276,7 @@ namespace CondominusApi.Controllers
                     .FirstOrDefaultAsync(x => x.Id == u.Id);
                 Pessoa pessoa = await _context.Pessoas //Busca o usuário no banco através do Id
                     .FirstOrDefaultAsync(x => x.Id == u.Id);
-                
+
                 usuario.Nome = u.Nome;
                 usuario.Telefone = u.Telefone;
                 usuario.Cpf = u.Cpf;
