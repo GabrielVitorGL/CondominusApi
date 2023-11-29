@@ -14,12 +14,12 @@ namespace CondominusApi.Controllers
     [Route("[controller]")]
     public class PessoasController : ControllerBase
     {
-        private readonly DataContext _context; 
+        private readonly DataContext _context;
 
         public PessoasController(DataContext context)
         {
             _context = context;
-        } 
+        }
 
         //listagem geral de pessoas
         [HttpGet("GetAll")]
@@ -58,9 +58,9 @@ namespace CondominusApi.Controllers
         {
             try
             {
-                List<Pessoa> pessoas = await _context.Pessoas.ToListAsync();           
-                List<Pessoa> moradores = pessoas.Where(p => p.Perfil == "Morador").ToList();                
-                return Ok(moradores);     
+                List<Pessoa> pessoas = await _context.Pessoas.ToListAsync();
+                List<Pessoa> moradores = pessoas.Where(p => p.Perfil == "Morador").ToList();
+                return Ok(moradores);
             }
             catch (System.Exception ex)
             {
@@ -74,9 +74,9 @@ namespace CondominusApi.Controllers
         {
             try
             {
-                List<Pessoa> pessoas = await _context.Pessoas.ToListAsync();           
-                List<Pessoa> sindicos = pessoas.Where(p => p.Perfil == "Sindico").ToList();                
-                return Ok(sindicos);     
+                List<Pessoa> pessoas = await _context.Pessoas.ToListAsync();
+                List<Pessoa> sindicos = pessoas.Where(p => p.Perfil == "Sindico").ToList();
+                return Ok(sindicos);
             }
             catch (System.Exception ex)
             {
@@ -99,7 +99,7 @@ namespace CondominusApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        
+
         [HttpPut]
         public async Task<IActionResult> Update(Pessoa p)
         {
@@ -120,7 +120,7 @@ namespace CondominusApi.Controllers
                 attach.Property(x => x.Telefone).IsModified = true;
                 attach.Property(x => x.Cpf).IsModified = true;
                 //attach.Property(x => x.IdApartamento).IsModified = true;
-                
+
                 int linhasAfetadas = await _context.SaveChangesAsync(); //Confirma a alteração no banco
                 return Ok(linhasAfetadas); //Retorna as linhas afetadas (Geralmente sempre 1 linha msm)
             }
@@ -142,6 +142,41 @@ namespace CondominusApi.Controllers
                 return Ok(linhaAfetadas);
             }
             catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("DeletarMuitos")]
+        public async Task<IActionResult> DeletarPessoas([FromBody] int[] ids)
+        {
+            try
+            {
+                if (ids == null || ids.Length == 0)
+                {
+                    throw new Exception("Selecione pessoas para deletar.");
+                }
+
+                // Filtrar apenas IDs válidos e existentes no banco de dados
+                var pessoasParaDeletar = await _context.Pessoas
+                    .Where(u => ids.Contains(u.Id))
+                    .ToListAsync();
+
+                if (pessoasParaDeletar.Count == 0)
+                {
+                    return NotFound("Nenhuma pessoa encontrada para os IDs fornecidos.");
+                }
+
+                _context.Pessoas.RemoveRange(pessoasParaDeletar);
+
+                int linhasAfetadas = await _context.SaveChangesAsync();
+
+                // Após deletar as pessoas, recupere a lista atualizada de usuários
+                var listaAtualizada = await _context.Pessoas.ToListAsync();
+
+                return Ok(listaAtualizada);
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
