@@ -105,5 +105,40 @@ namespace CondominusApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpDelete("DeletarMuitos")]
+        public async Task<IActionResult> DeletarEntregas([FromBody] int[] ids)
+        {
+            try
+            {
+                if (ids == null || ids.Length == 0)
+                {
+                    throw new Exception("Selecione entregas para deletar.");
+                }
+
+                // Filtrar apenas IDs válidos e existentes no banco de dados
+                var entregasParaDeletar = await _context.Entregas
+                    .Where(u => ids.Contains(u.Id))
+                    .ToListAsync();
+
+                if (entregasParaDeletar.Count == 0)
+                {
+                    return NotFound("Nenhuma entrega encontrada para os IDs fornecidos.");
+                }
+
+                _context.Entregas.RemoveRange(entregasParaDeletar);
+
+                int linhasAfetadas = await _context.SaveChangesAsync();
+
+                // Após deletar as entregas, recupere a lista atualizada de usuários
+                var listaAtualizada = await _context.Entregas.ToListAsync();
+
+                return Ok(listaAtualizada);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
