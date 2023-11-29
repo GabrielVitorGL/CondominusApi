@@ -78,5 +78,32 @@ namespace CondominusApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut]
+        public async Task<IActionResult> Update(Entrega entregaAtualizada)
+        {
+            try
+            {
+                Entrega entrega = await _context.Entregas
+                    .FirstOrDefaultAsync(x => x.Id == entregaAtualizada.Id);
+
+                if (entrega == null)
+                {
+                    return NotFound();
+                }
+
+                entrega.Destinatario = entregaAtualizada.Destinatario;
+                entrega.DataRetirada = entregaAtualizada.DataRetirada;
+                entrega.IdApartamento = entregaAtualizada.IdApartamento;
+
+                await _context.SaveChangesAsync();
+
+                return Ok(entrega);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
