@@ -100,7 +100,7 @@ namespace CondominusApi.Controllers
             }
         }
         
-        [HttpPost("AtualizarPessoa")]
+        [HttpPut]
         public async Task<IActionResult> Update(Pessoa p)
         {
             try
