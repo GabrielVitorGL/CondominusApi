@@ -267,7 +267,7 @@ namespace CondominusApi.Controllers
         }
 
         //Método para alteração do e-mail
-        [HttpPut("AtualizarUsuario")]
+        [HttpPut]
         public async Task<IActionResult> AtualizarUsuario(Usuario u)
         {
             try
