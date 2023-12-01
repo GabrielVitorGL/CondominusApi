@@ -92,9 +92,20 @@ namespace CondominusApi.Controllers
                     return NotFound();
                 }
 
-                entrega.Destinatario = entregaAtualizada.Destinatario;
-                entrega.DataRetirada = entregaAtualizada.DataRetirada;
-                entrega.IdApartamento = entregaAtualizada.IdApartamento;
+
+                if (!string.IsNullOrEmpty(entregaAtualizada.Destinatario))
+                {
+                    entrega.Destinatario = entregaAtualizada.Destinatario;
+                }
+                if (entregaAtualizada.DataRetirada != null)
+                {
+                    entrega.DataRetirada = entregaAtualizada.DataRetirada;
+                }
+                if (entregaAtualizada.IdApartamento != 0)
+                {
+                    entrega.IdApartamento = entregaAtualizada.IdApartamento;
+                }
+
 
                 await _context.SaveChangesAsync();
 
