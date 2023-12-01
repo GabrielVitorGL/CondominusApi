@@ -278,15 +278,15 @@ namespace CondominusApi.Controllers
                     .FirstOrDefaultAsync(x => x.Id == u.Id);
 
                 usuario.Nome = u.Nome;
-                usuario.Telefone = u.Telefone;
-                usuario.Cpf = u.Cpf;
-                usuario.Apartamentos = u.Apartamentos;
+                //usuario.Telefone = u.Telefone;
+                //usuario.Cpf = u.Cpf;
+                //usuario.Apartamentos = u.Apartamentos;
                 usuario.Email = u.Email;
 
-                pessoa.Telefone = u.Telefone;
-                pessoa.Nome = u.Nome;
-                pessoa.Cpf = u.Cpf;
-                pessoa.Apartamentos = u.Apartamentos;
+                //pessoa.Telefone = u.Telefone;
+                //pessoa.Nome = u.Nome;
+                //pessoa.Cpf = u.Cpf;
+                //pessoa.Apartamentos = u.Apartamentos;
 
                 var attach = _context.Attach(usuario);
                 attach.Property(x => x.Id).IsModified = false;
