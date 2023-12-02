@@ -64,6 +64,7 @@ namespace CondominusApi.Controllers
                 if (reserva == null)
                     return NotFound("Reserva não encontrada");
 
+                // mudar para poder alterar as duas datas: inicial e/ou final
                 reserva.Data = reservaAtualizada.Data;
 
                 _context.Reservas.Update(reserva);
@@ -77,5 +78,38 @@ namespace CondominusApi.Controllers
             }
         }
 
+        [HttpDelete("DeletarMuitos")]
+        public async Task<IActionResult> DeleteReservas([FromBody] int[] ids)
+        {
+            try
+            {
+                if (ids == null || ids.Length == 0)
+                {
+                    throw new Exception("Selecione reservas para deletar.");
+                }
+
+                // Filtrar apenas IDs válidos e existentes no banco de dados
+                var reservasParaDeletar = await _context.Reservas
+                    .Where(u => ids.Contains(u.Id))
+                    .ToListAsync();
+
+                if (reservasParaDeletar.Count == 0)
+                {
+                    return NotFound("Nenhuma reserva encontrada para os IDs fornecidos.");
+                }
+
+                _context.Reservas.RemoveRange(reservasParaDeletar);
+
+                int linhasAfetadas = await _context.SaveChangesAsync();
+
+                // Após deletar as reservas, recupere a lista atualizada de reservas
+                var listaAtualizada = await _context.Reservas.ToListAsync();
+                return Ok(listaAtualizada);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
