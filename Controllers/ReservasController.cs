@@ -53,5 +53,29 @@ namespace CondominusApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut]
+        public async Task<IActionResult> Update(Reserva reservaAtualizada)
+        {
+            try
+            {
+                Reserva reserva = await _context.Reservas.FindAsync(reservaAtualizada.Id);
+
+                if (reserva == null)
+                    return NotFound("Reserva não encontrada");
+
+                reserva.Data = reservaAtualizada.Data;
+
+                _context.Reservas.Update(reserva);
+                await _context.SaveChangesAsync();
+
+                return Ok(reserva.Id);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }
