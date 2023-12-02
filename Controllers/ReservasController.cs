@@ -14,7 +14,7 @@ namespace CondominusApi.Controllers
     [Route("[controller]")]
     public class ReservasController : ControllerBase
     {
-        private readonly DataContext _context; 
+        private readonly DataContext _context;
 
         public ReservasController(DataContext context)
         {
@@ -26,7 +26,10 @@ namespace CondominusApi.Controllers
         {
             try
             {
-                List<Reserva> reservas = await _context.Reservas.ToListAsync();                
+                List<Reserva> reservas = await _context.Reservas
+                .Include(r => r.Pessoa)
+                .Include(r => r.AreaComum)
+                .ToListAsync();
                 return Ok(reservas);
             }
             catch (System.Exception ex)
