@@ -43,6 +43,14 @@ namespace CondominusApi.Controllers
         {
             try
             {
+                AreaComum ac = await _context.AreasComuns
+                    .FirstOrDefaultAsync(x => x.Id == novaReserva.IdAreaComum);
+
+                Pessoa p = await _context.Pessoas
+                    .FirstOrDefaultAsync(x => x.Id == novaReserva.IdPessoa);
+
+                novaReserva.AreaComum = ac;
+                novaReserva.Pessoa = p;
                 await _context.Reservas.AddAsync(novaReserva);
                 await _context.SaveChangesAsync();
 
