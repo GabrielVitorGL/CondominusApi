@@ -27,7 +27,9 @@ namespace CondominusApi.Controllers
         {
             try
             {
-                List<Dependente> dependentes = await _context.Dependentes.ToListAsync();
+                List<Dependente> dependentes = await _context.Dependentes
+                .Include(d => d.Pessoa)
+                .ToListAsync();
                 return Ok(dependentes);
             }
             catch (System.Exception ex)
