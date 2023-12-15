@@ -6,6 +6,7 @@ using CondominusApi.Data;
 using CondominusApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using CondominusApi.Utils;
 
 namespace CondominusApi.Controllers
 {
@@ -27,33 +28,85 @@ namespace CondominusApi.Controllers
             try
             {
                 List<Entrega> entregas = await _context.Entregas.ToListAsync();
-                List<EntregaComApartamento> entregasComApartamento = new List<EntregaComApartamento>();
-
-                foreach (var entrega in entregas)
-                {
-                    Apartamento ap = await _context.Apartamentos.FirstOrDefaultAsync(x => x.Id == entrega.IdApartamento);
-
-                    if (ap != null)
-                    {
-                        // Cria um novo objeto de entrega com o número do apartamento
-                        EntregaComApartamento entregaComAp = new EntregaComApartamento
-                        {
-                            Id = entrega.Id,
-                            Destinatario = entrega.Destinatario,
-                            DataEntrega = entrega.DataEntrega,
-                            DataRetirada = entrega.DataRetirada,
-                            IdApartamento = entrega.IdApartamento,
-
-                            NumeroApartamento = ap.Numero
-                        };
-
-                        entregasComApartamento.Add(entregaComAp);
-                    }
-                }
-
-                return Ok(entregasComApartamento);
+                return Ok(entregas);
             }
             catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetAllCondominio")]
+        public async Task<IActionResult> ListarPorCondominioAsync()
+        {
+            try
+            {
+                string token = HttpContext.Request.Headers["Authorization"].ToString();
+                string idCondominioToken = Criptografia.ObterIdCondominioDoToken(token.Remove(0, 7));
+                List<Entrega> entregas = await _context.Entregas
+                .Include(x => x.ApartamentoEnt)
+                .ThenInclude(x => x.CondominioApart)
+                .Where(x => x.ApartamentoEnt.CondominioApart.IdCond.ToString() == idCondominioToken)
+                .ToListAsync();
+
+                List<EntregaDTO> entregasRetorno = new List<EntregaDTO>();
+                foreach (Entrega x in entregas)
+                {
+                    EntregaDTO entregaDTO = new EntregaDTO
+                    {
+                        Id = x.IdEnt,
+                        DestinatarioEntDTO = x.DestinatarioEnt,
+                        NumeroApartDTO = x.ApartamentoEnt.NumeroApart,
+                        DataEntregaEntDTO = x.DataEntregaEnt,
+                        DataRetiradaEntDTO = x.DataRetiradaEnt
+                    };
+                    entregasRetorno.Add(entregaDTO);
+                }
+
+                return Ok(entregasRetorno);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetAllCondominioMorador")]
+        public async Task<IActionResult> ListarPorMoradorAsync()
+        {
+            try
+            {
+                string token = HttpContext.Request.Headers["Authorization"].ToString();
+                string idCondominioToken = Criptografia.ObterIdCondominioDoToken(token.Remove(0, 7));
+                string idUsuarioToken = Criptografia.ObterIdUsuarioDoToken(token.Remove(0, 7));
+
+                Pessoa pessoa = await _context.Pessoas
+                .Include(u => u.UsuarioPessoa).FirstOrDefaultAsync(x => x.UsuarioPessoa.IdUsuario.ToString() == idUsuarioToken);
+
+                List<Entrega> entregas = await _context.Entregas
+                .Include(x => x.ApartamentoEnt)
+                .ThenInclude(x => x.CondominioApart)
+                .Where(x => x.ApartamentoEnt.CondominioApart.IdCond.ToString() == idCondominioToken)
+                .Where(x => x.ApartamentoEnt.PessoasApart.Any(x => x.IdApartamentoPessoa == pessoa.IdApartamentoPessoa))
+                .ToListAsync();
+
+                List<EntregaDTO> entregasRetorno = new List<EntregaDTO>();
+                foreach (Entrega x in entregas)
+                {
+                    EntregaDTO entregaDTO = new EntregaDTO
+                    {
+                        Id = x.IdEnt,
+                        DestinatarioEntDTO = x.DestinatarioEnt,
+                        NumeroApartDTO = x.ApartamentoEnt.NumeroApart,
+                        DataEntregaEntDTO = x.DataEntregaEnt,
+                        DataRetiradaEntDTO = x.DataRetiradaEnt
+                    };
+                    entregasRetorno.Add(entregaDTO);
+                }
+
+                return Ok(entregasRetorno);
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -64,14 +117,10 @@ namespace CondominusApi.Controllers
         {
             try
             {
-                Apartamento ap = await _context.Apartamentos
-                    .FirstOrDefaultAsync(x => x.Id == novaEntrega.IdApartamento);
-
-                novaEntrega.Apartamento = ap;
                 await _context.Entregas.AddAsync(novaEntrega);
                 await _context.SaveChangesAsync();
 
-                return Ok(novaEntrega.Id);
+                return Ok(novaEntrega.IdEnt);
             }
             catch (System.Exception ex)
             {
@@ -80,36 +129,36 @@ namespace CondominusApi.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(Entrega entregaAtualizada)
+        public async Task<IActionResult> Update(Entrega entrega)
         {
             try
             {
-                Entrega entrega = await _context.Entregas
-                    .FirstOrDefaultAsync(x => x.Id == entregaAtualizada.Id);
+                Entrega et = await _context.Entregas
+                    .FirstOrDefaultAsync(x => x.IdEnt == entrega.IdEnt);
 
-                if (entrega == null)
+                if (et != null)
+                {
+                    if (entrega.IdApartamentoEnt != 0)
+                    {
+                        et.IdApartamentoEnt = entrega.IdApartamentoEnt;
+                    }
+                    if (entrega.DestinatarioEnt != null)
+                    {
+                        et.DestinatarioEnt = entrega.DestinatarioEnt;
+                    }
+                    if (entrega.DataRetiradaEnt != null)
+                    {
+                        et.DataRetiradaEnt = entrega.DataRetiradaEnt;
+                    }
+
+                    _context.Entregas.Update(et);
+                    await _context.SaveChangesAsync();
+                    return Ok(et.IdEnt);
+                }
+                else
                 {
                     return NotFound();
                 }
-
-
-                if (!string.IsNullOrEmpty(entregaAtualizada.Destinatario))
-                {
-                    entrega.Destinatario = entregaAtualizada.Destinatario;
-                }
-                if (entregaAtualizada.DataRetirada != null)
-                {
-                    entrega.DataRetirada = entregaAtualizada.DataRetirada;
-                }
-                if (entregaAtualizada.IdApartamento != 0)
-                {
-                    entrega.IdApartamento = entregaAtualizada.IdApartamento;
-                }
-
-
-                await _context.SaveChangesAsync();
-
-                return Ok(entrega);
             }
             catch (System.Exception ex)
             {
@@ -118,7 +167,7 @@ namespace CondominusApi.Controllers
         }
 
         [HttpDelete("DeletarMuitos")]
-        public async Task<IActionResult> DeletarEntregas([FromBody] int[] ids)
+        public async Task<IActionResult> DeleteEntregas([FromBody] int[] ids)
         {
             try
             {
@@ -129,7 +178,7 @@ namespace CondominusApi.Controllers
 
                 // Filtrar apenas IDs válidos e existentes no banco de dados
                 var entregasParaDeletar = await _context.Entregas
-                    .Where(u => ids.Contains(u.Id))
+                    .Where(u => ids.Contains(u.IdEnt))
                     .ToListAsync();
 
                 if (entregasParaDeletar.Count == 0)
@@ -141,10 +190,36 @@ namespace CondominusApi.Controllers
 
                 int linhasAfetadas = await _context.SaveChangesAsync();
 
-                // Após deletar as entregas, recupere a lista atualizada de usuários
-                var listaAtualizada = await _context.Entregas.ToListAsync();
+                // Após deletar as áreas comuns, recupere a lista atualizada
+                string token = HttpContext.Request.Headers["Authorization"].ToString();
+                string idCondominioToken = Criptografia.ObterIdCondominioDoToken(token.Remove(0, 7));
+                string idUsuarioToken = Criptografia.ObterIdUsuarioDoToken(token.Remove(0, 7));
 
-                return Ok(listaAtualizada);
+                Pessoa pessoa = await _context.Pessoas
+                .Include(u => u.UsuarioPessoa).FirstOrDefaultAsync(x => x.UsuarioPessoa.IdUsuario.ToString() == idUsuarioToken);
+
+                List<Entrega> entregas = await _context.Entregas
+                .Include(x => x.ApartamentoEnt)
+                .ThenInclude(x => x.CondominioApart)
+                .Where(x => x.ApartamentoEnt.CondominioApart.IdCond.ToString() == idCondominioToken)
+                .Where(x => x.ApartamentoEnt.PessoasApart.Any(x => x.IdPessoa == pessoa.IdPessoa))
+                .ToListAsync();
+
+                List<EntregaDTO> entregasRetorno = new List<EntregaDTO>();
+                foreach (Entrega x in entregas)
+                {
+                    EntregaDTO entregaDTO = new EntregaDTO
+                    {
+                        Id = x.IdEnt,
+                        DestinatarioEntDTO = x.DestinatarioEnt,
+                        NumeroApartDTO = x.ApartamentoEnt.NumeroApart,
+                        DataEntregaEntDTO = x.DataEntregaEnt,
+                        DataRetiradaEntDTO = x.DataRetiradaEnt
+                    };
+                    entregasRetorno.Add(entregaDTO);
+                }
+
+                return Ok(entregasRetorno);
             }
             catch (Exception ex)
             {

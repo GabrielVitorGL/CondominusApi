@@ -6,6 +6,7 @@ using CondominusApi.Data;
 using CondominusApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using CondominusApi.Utils;
 
 namespace CondominusApi.Controllers
 {
@@ -21,18 +22,102 @@ namespace CondominusApi.Controllers
             _context = context;
         }
 
-        //listagem geral de pessoas
+        // listagem geral de pessoas
         [HttpGet("GetAll")]
         public async Task<IActionResult> ListarAsync()
         {
             try
             {
-                List<Dependente> dependentes = await _context.Dependentes
-                .Include(d => d.Pessoa)
-                .ToListAsync();
-                return Ok(dependentes);
+                List<Dependente> lista = await _context.Dependentes.Include(r => r.PessoaDependente).ToListAsync();
+                List<DependenteDTO> dependenteRetorno = new List<DependenteDTO>();
+                foreach (Dependente u in lista)
+                {
+                    DependenteDTO dependenteDTO = new DependenteDTO
+                    {
+                        Id = u.IdDependente,
+                        NomeDependenteDTO = u.NomeDependente,
+                        CpfDependenteDTO = u.CpfDependente,
+                        NomePessoaDependenteDTO = u.PessoaDependente.NomePessoa
+                    };
+                    dependenteRetorno.Add(dependenteDTO);
+                }
+                return Ok(dependenteRetorno);
             }
             catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetAllCondominio")]
+        public async Task<IActionResult> ListarPorCondominioAsync()
+        {
+            try
+            {
+                string token = HttpContext.Request.Headers["Authorization"].ToString();
+                string idCondominioToken = Criptografia.ObterIdCondominioDoToken(token.Remove(0, 7));
+                string idUsuarioToken = Criptografia.ObterIdUsuarioDoToken(token.Remove(0, 7));
+
+                List<Dependente> dependentes = await _context.Dependentes
+                .Include(x => x.PessoaDependente)
+                .ThenInclude(x => x.ApartamentoPessoa)
+                .ThenInclude(x => x.CondominioApart)
+                .Where(x => x.PessoaDependente.ApartamentoPessoa.CondominioApart.IdCond.ToString() == idCondominioToken)
+                .ToListAsync();
+
+                List<DependenteDTO> dependentesRetorno = new List<DependenteDTO>();
+                foreach (Dependente x in dependentes)
+                {
+                    DependenteDTO dependenteDTO = new DependenteDTO
+                    {
+                        Id = x.IdDependente,
+                        NomeDependenteDTO = x.NomeDependente,
+                        CpfDependenteDTO = x.CpfDependente,
+                        NomePessoaDependenteDTO = x.PessoaDependente.NomePessoa,
+                        NumeroApartamentoDependenteDTO = x.PessoaDependente.ApartamentoPessoa.NumeroApart
+                    };
+                    dependentesRetorno.Add(dependenteDTO);
+                }
+
+                return Ok(dependentesRetorno);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetAllDepCondominio")]
+        public async Task<IActionResult> ListarPorDepCondominioAsync()
+        {
+            try
+            {
+                string token = HttpContext.Request.Headers["Authorization"].ToString();
+                string idCondominioToken = Criptografia.ObterIdCondominioDoToken(token.Remove(0, 7));
+                List<Dependente> dependentes = await _context.Dependentes
+                .Include(x => x.PessoaDependente)
+                .ThenInclude(x => x.ApartamentoPessoa)
+                .ThenInclude(x => x.CondominioApart)
+                .Where(x => x.PessoaDependente.ApartamentoPessoa.CondominioApart.IdCond.ToString() == idCondominioToken)
+                .ToListAsync();
+
+                List<DependenteDTO> dependentesRetorno = new List<DependenteDTO>();
+                foreach (Dependente x in dependentes)
+                {
+                    DependenteDTO dependenteDTO = new DependenteDTO
+                    {
+                        Id = x.IdDependente,
+                        NomeDependenteDTO = x.NomeDependente,
+                        CpfDependenteDTO = x.CpfDependente,
+                        NomePessoaDependenteDTO = x.PessoaDependente.NomePessoa,
+                        NumeroApartamentoDependenteDTO = x.PessoaDependente.ApartamentoPessoa.NumeroApart
+                    };
+                    dependentesRetorno.Add(dependenteDTO);
+                }
+
+                return Ok(dependentesRetorno);
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -43,14 +128,38 @@ namespace CondominusApi.Controllers
         {
             try
             {
-                // Pessoa temp = await _context.Pessoas.FirstOrDefaultAsync(p => p.Id.Equals(novoDependente.IdPessoa));
-                // temp.Dependentes.Add(novoDependente);
-                // _context.Pessoas.Update(temp);
+                Pessoa temp = await _context.Pessoas.FirstOrDefaultAsync(p => p.IdPessoa == novoDependente.IdPessoaDependente);
+                novoDependente.PessoaDependente = temp;
 
                 await _context.Dependentes.AddAsync(novoDependente);
                 await _context.SaveChangesAsync();
 
-                return Ok(novoDependente.Id);
+                return Ok(novoDependente.PessoaDependente.NomePessoa);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("AddDepMorador")]
+        public async Task<IActionResult> AddPeloMorador(Dependente novoDependente)
+        {
+            try
+            {
+                string token = HttpContext.Request.Headers["Authorization"].ToString();
+                string idUsuarioToken = Criptografia.ObterIdUsuarioDoToken(token.Remove(0, 7));
+
+                Usuario userTemp = await _context.Usuarios.FirstOrDefaultAsync(p => p.IdUsuario.ToString() == idUsuarioToken);
+                string idPessoaStr = userTemp.IdPessoaUsuario.ToString();
+
+                Pessoa temp = await _context.Pessoas.FirstOrDefaultAsync(p => p.IdPessoa.ToString() == idPessoaStr);
+                novoDependente.PessoaDependente = temp;
+
+                await _context.Dependentes.AddAsync(novoDependente);
+                await _context.SaveChangesAsync();
+
+                return Ok(novoDependente.PessoaDependente.NomePessoa);
             }
             catch (System.Exception ex)
             {
@@ -64,16 +173,22 @@ namespace CondominusApi.Controllers
             try
             {
                 Dependente dp = await _context.Dependentes
-                    .FirstOrDefaultAsync(x => x.Id == dependente.Id);
+                    .FirstOrDefaultAsync(x => x.IdDependente == dependente.IdDependente);
 
                 if (dp != null)
                 {
-                    dp.Nome = dependente.Nome;
-                    dp.Telefone = dependente.Telefone;
+                    if (dependente.NomeDependente != null)
+                    {
+                        dp.NomeDependente = dependente.NomeDependente;
+                    }
+                    if (dependente.CpfDependente != null)
+                    {
+                        dp.CpfDependente = dependente.CpfDependente;
+                    }
 
                     _context.Dependentes.Update(dp);
                     await _context.SaveChangesAsync();
-                    return Ok(dp.Id);
+                    return Ok(dp.IdDependente);
                 }
                 else
                 {
@@ -98,7 +213,7 @@ namespace CondominusApi.Controllers
 
                 // Filtrar apenas IDs válidos e existentes no banco de dados
                 var dependentesParaDeletar = await _context.Dependentes
-                    .Where(u => ids.Contains(u.Id))
+                    .Where(u => ids.Contains(u.IdDependente))
                     .ToListAsync();
 
                 if (dependentesParaDeletar.Count == 0)
@@ -111,8 +226,29 @@ namespace CondominusApi.Controllers
                 int linhasAfetadas = await _context.SaveChangesAsync();
 
                 // Após deletar as áreas comuns, recupere a lista atualizada
-                var listaAtualizada = await _context.Dependentes.ToListAsync();
-                return Ok(listaAtualizada);
+                string token = HttpContext.Request.Headers["Authorization"].ToString();
+                string idCondominioToken = Criptografia.ObterIdCondominioDoToken(token.Remove(0, 7));
+                List<Dependente> dependentes = await _context.Dependentes
+                .Include(x => x.PessoaDependente)
+                .ThenInclude(x => x.ApartamentoPessoa)
+                .ThenInclude(x => x.CondominioApart)
+                .Where(x => x.PessoaDependente.ApartamentoPessoa.CondominioApart.IdCond.ToString() == idCondominioToken)
+                .ToListAsync();
+
+                List<DependenteDTO> dependentesRetorno = new List<DependenteDTO>();
+                foreach (Dependente x in dependentes)
+                {
+                    DependenteDTO dependenteDTO = new DependenteDTO
+                    {
+                        Id = x.IdDependente,
+                        NomeDependenteDTO = x.NomeDependente,
+                        CpfDependenteDTO = x.CpfDependente,
+                        NomePessoaDependenteDTO = x.PessoaDependente.NomePessoa
+                    };
+                    dependentesRetorno.Add(dependenteDTO);
+                }
+
+                return Ok(dependentesRetorno);
             }
             catch (Exception ex)
             {

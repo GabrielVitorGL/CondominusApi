@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,12 +8,17 @@ namespace CondominusApi.Models
 {
     public class Pessoa
     {
-        public int Id { get; set; }
-        public string Nome { get; set; }
-        public string Perfil { get; set; }
-        public string Telefone { get; set; }
-        public string Cpf { get; set; }
-        public List<Dependente> Dependentes { get; set; }
-        public List<ApartPessoa> Apartamentos { get; set; }
+        [Key]
+        public int IdPessoa { get; set; }
+        public string NomePessoa { get; set; }
+        public string TelefonePessoa { get; set; }
+        public string TipoPessoa { get; set; }
+        public string CpfPessoa { get; set; }
+        public Apartamento ApartamentoPessoa { get; set;}
+        public int IdApartamentoPessoa { get; set;}
+        public Usuario UsuarioPessoa { get; set; }
+        public int? IdUsuarioPessoa { get; set; }
+        public List<Dependente> DependentesPessoa { get; set; }
+        public List<PessoaAreaComum> PessoaACPessoa { get; set; }
     }
 }

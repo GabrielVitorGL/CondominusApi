@@ -1,11 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-// using System.Collections.Generic;
-// using System.Linq;
-// using System.Threading.Tasks;
 using CondominusApi.Data;
 using CondominusApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using CondominusApi.Utils;
 
 namespace CondominusApi.Controllers
 {
@@ -29,7 +27,39 @@ namespace CondominusApi.Controllers
                 List<Apartamento> apartamentos = await _context.Apartamentos.ToListAsync();
                 return Ok(apartamentos);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetAllCondominio")]
+        public async Task<IActionResult> ListarPorCondominioAsync()
+        {
+            try
+            {
+                string token = HttpContext.Request.Headers["Authorization"].ToString();
+                string idCondominioToken = Criptografia.ObterIdCondominioDoToken(token.Remove(0, 7));
+                List<Apartamento> apartamentos = await _context.Apartamentos
+                .Include(c => c.CondominioApart)
+                .Where(ap => ap.IdCondominioApart.ToString() == idCondominioToken)
+                .ToListAsync();
+
+                List<ApartamentoDTO> apartamentosRetorno = new List<ApartamentoDTO>();
+                foreach (Apartamento x in apartamentos)
+                {
+                    ApartamentoDTO apartamentoDTO = new ApartamentoDTO
+                    {
+                        Id = x.IdApart,
+                        NumeroApartamentoDTO = x.NumeroApart,
+                        TelefoneApartamentoDTO = x.TelefoneApart
+                    };
+                    apartamentosRetorno.Add(apartamentoDTO);
+                }
+
+                return Ok(apartamentosRetorno);
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -40,12 +70,22 @@ namespace CondominusApi.Controllers
         {
             try
             {
+                string token = HttpContext.Request.Headers["Authorization"].ToString();
+                string idCondominioToken = Criptografia.ObterIdCondominioDoToken(token.Remove(0, 7));
+                int idCondominio = Int32.Parse(idCondominioToken);
+                Condominio condominio = await _context.Condominios
+                .FirstOrDefaultAsync(cond => cond.IdCond == idCondominio);
+
+                novoApartamento.IdCondominioApart = idCondominio;
+                novoApartamento.CondominioApart = condominio;
+
+
                 await _context.Apartamentos.AddAsync(novoApartamento);
                 await _context.SaveChangesAsync();
 
-                return Ok(novoApartamento.Id);
+                return Ok(novoApartamento);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -57,16 +97,16 @@ namespace CondominusApi.Controllers
             try
             {
                 Apartamento ap = await _context.Apartamentos
-                    .FirstOrDefaultAsync(x => x.Id == apartamento.Id);
+                    .FirstOrDefaultAsync(x => x.IdApart == apartamento.IdApart);
 
                 if (ap != null)
                 {
-                    ap.Numero = apartamento.Numero;
-                    ap.Telefone = apartamento.Telefone;
+                    ap.NumeroApart = apartamento.NumeroApart;
+                    ap.TelefoneApart = apartamento.TelefoneApart;
 
                     _context.Apartamentos.Update(ap);
                     await _context.SaveChangesAsync();
-                    return Ok(ap.Id);
+                    return Ok(ap.IdApart);
                 }
                 else
                 {
@@ -91,7 +131,7 @@ namespace CondominusApi.Controllers
 
                 // Filtrar apenas IDs válidos e existentes no banco de dados
                 var apartamentosParaDeletar = await _context.Apartamentos
-                    .Where(u => ids.Contains(u.Id))
+                    .Where(u => ids.Contains(u.IdApart))
                     .ToListAsync();
 
                 if (apartamentosParaDeletar.Count == 0)
@@ -104,8 +144,26 @@ namespace CondominusApi.Controllers
                 int linhasAfetadas = await _context.SaveChangesAsync();
 
                 // Após deletar as áreas comuns, recupere a lista atualizada
-                var listaAtualizada = await _context.Apartamentos.ToListAsync();
-                return Ok(listaAtualizada);
+                string token = HttpContext.Request.Headers["Authorization"].ToString();
+                string idCondominioToken = Criptografia.ObterIdCondominioDoToken(token.Remove(0, 7));
+                List<Apartamento> apartamentos = await _context.Apartamentos
+                .Include(c => c.CondominioApart)
+                .Where(ap => ap.IdCondominioApart.ToString() == idCondominioToken)
+                .ToListAsync();
+
+                List<ApartamentoDTO> apartamentosRetorno = new List<ApartamentoDTO>();
+                foreach (Apartamento x in apartamentos)
+                {
+                    ApartamentoDTO apartamentoDTO = new ApartamentoDTO
+                    {
+                        Id = x.IdApart,
+                        NumeroApartamentoDTO = x.NumeroApart,
+                        TelefoneApartamentoDTO = x.TelefoneApart
+                    };
+                    apartamentosRetorno.Add(apartamentoDTO);
+                }
+
+                return Ok(apartamentosRetorno);
             }
             catch (Exception ex)
             {

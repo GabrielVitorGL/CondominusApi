@@ -1,7 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-// using System.Collections.Generic;
-// using System.Linq;
-// using System.Threading.Tasks;
 using CondominusApi.Data;
 using CondominusApi.Models;
 using Microsoft.EntityFrameworkCore;
@@ -43,7 +40,7 @@ namespace CondominusApi.Controllers
                 await _context.Condominios.AddAsync(novoCondominio);
                 await _context.SaveChangesAsync();
 
-                return Ok(novoCondominio.Id);
+                return Ok(novoCondominio.IdCond);
             }
             catch (System.Exception ex)
             {

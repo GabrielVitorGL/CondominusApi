@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\etechas\\Documents\\GitHub\\CondominusApi\\CondominusApi.csproj": {}
+    "C:\\Users\\gabri\\OneDrive\\Documentos\\Documentos\\GitHub\\CondominusApi\\CondominusApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\etechas\\Documents\\GitHub\\CondominusApi\\CondominusApi.csproj": {
+    "C:\\Users\\gabri\\OneDrive\\Documentos\\Documentos\\GitHub\\CondominusApi\\CondominusApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\etechas\\Documents\\GitHub\\CondominusApi\\CondominusApi.csproj",
+        "projectUniqueName": "C:\\Users\\gabri\\OneDrive\\Documentos\\Documentos\\GitHub\\CondominusApi\\CondominusApi.csproj",
         "projectName": "CondominusApi",
-        "projectPath": "C:\\Users\\etechas\\Documents\\GitHub\\CondominusApi\\CondominusApi.csproj",
-        "packagesPath": "C:\\Users\\etechas\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\etechas\\Documents\\GitHub\\CondominusApi\\obj\\",
+        "projectPath": "C:\\Users\\gabri\\OneDrive\\Documentos\\Documentos\\GitHub\\CondominusApi\\CondominusApi.csproj",
+        "packagesPath": "C:\\Users\\gabri\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\gabri\\OneDrive\\Documentos\\Documentos\\GitHub\\CondominusApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\etechas\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\gabri\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -27,7 +27,7 @@
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "C:\\Program Files\\dotnet\\library-packs": {},
-          "C:\\Program Files\\dotnet\\sdk\\7.0.305\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
+          "C:\\Program Files\\dotnet\\sdk\\7.0.304\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -96,7 +96,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.305\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -31,6 +32,27 @@ namespace CondominusApi.Utils
                 return true;
             }
         }
+
+        public static string ObterIdCondominioDoToken(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+
+            var IdCond = jsonToken?.Subject;
+
+            return IdCond;
+        }
+
+        public static string ObterIdUsuarioDoToken(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+
+            var IdUser = jsonToken?.Actor;
+
+            return IdUser;
+        }
+
 
     }
 }

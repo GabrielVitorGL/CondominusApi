@@ -6,6 +6,7 @@ using CondominusApi.Data;
 using CondominusApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using CondominusApi.Utils;
 
 namespace CondominusApi.Controllers
 {
@@ -35,15 +36,49 @@ namespace CondominusApi.Controllers
             }
         }
 
+        [HttpGet("GetAllCondominio")]
+        public async Task<IActionResult> ListarPorCondominioAsync()
+        {
+            try
+            {
+                string token = HttpContext.Request.Headers["Authorization"].ToString();
+                string idCondominioToken = Criptografia.ObterIdCondominioDoToken(token.Remove(0, 7));
+                var areasComuns = await _context.AreasComuns
+                .Where(c => c.IdCondominioAreaComum == idCondominioToken)
+                .ToListAsync();
+
+                List<AreaComumDTO> areasRetorno = new List<AreaComumDTO>();
+                foreach (AreaComum x in areasComuns)
+                {
+                    AreaComumDTO areaDTO = new AreaComumDTO
+                    {
+                        Id = x.IdAreaComum,
+                        NomeAreaComumDTO = x.NomeAreaComum
+                    };
+                    areasRetorno.Add(areaDTO);
+                }
+
+                return Ok(areasRetorno);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> Add(AreaComum novaAreaComum)
         {
             try
             {
+                string token = HttpContext.Request.Headers["Authorization"].ToString();
+                string idCondominioToken = Criptografia.ObterIdCondominioDoToken(token.Remove(0, 7));
+                novaAreaComum.IdCondominioAreaComum = idCondominioToken;
+
                 await _context.AreasComuns.AddAsync(novaAreaComum);
                 await _context.SaveChangesAsync();
 
-                return Ok(novaAreaComum.Id);
+                return Ok(novaAreaComum.IdAreaComum);
             }
             catch (System.Exception ex)
             {
@@ -56,18 +91,20 @@ namespace CondominusApi.Controllers
         {
             try
             {
-                AreaComum ac = await _context.AreasComuns
-                    .FirstOrDefaultAsync(x => x.Id == areaComum.Id);
+                AreaComum areaComumBuscada = await _context.AreasComuns
+                .FirstOrDefaultAsync(x => x.IdAreaComum == areaComum.IdAreaComum);
 
-                if (ac == null)
-                    return NotFound("Área comum não encontrada");
+                if (areaComumBuscada == null)
+                {
+                    return BadRequest("Área comum não encontrada");
+                }
 
-                ac.Nome = areaComum.Nome;
+                areaComumBuscada.NomeAreaComum = areaComum.NomeAreaComum;
 
-                _context.AreasComuns.Update(ac);
+                _context.AreasComuns.Update(areaComumBuscada);
                 await _context.SaveChangesAsync();
 
-                return Ok(ac.Id);
+                return Ok(areaComumBuscada);
             }
             catch (System.Exception ex)
             {
@@ -86,28 +123,42 @@ namespace CondominusApi.Controllers
                 }
 
                 // Filtrar apenas IDs válidos e existentes no banco de dados
-                var areascomunsParaDeletar = await _context.AreasComuns
-                    .Where(u => ids.Contains(u.Id))
+                var areasParaDeletar = await _context.AreasComuns
+                    .Where(u => ids.Contains(u.IdAreaComum))
                     .ToListAsync();
 
-                if (areascomunsParaDeletar.Count == 0)
+                if (areasParaDeletar.Count == 0)
                 {
                     return NotFound("Nenhuma área comum encontrada para os IDs fornecidos.");
                 }
 
-                _context.AreasComuns.RemoveRange(areascomunsParaDeletar);
+                _context.AreasComuns.RemoveRange(areasParaDeletar);
 
                 int linhasAfetadas = await _context.SaveChangesAsync();
 
-                // Após deletar as áreas comuns, recupere a lista atualizada
-                var listaAtualizada = await _context.AreasComuns.ToListAsync();
-                return Ok(listaAtualizada);
+                string token = HttpContext.Request.Headers["Authorization"].ToString();
+                string idCondominioToken = Criptografia.ObterIdCondominioDoToken(token.Remove(0, 7));
+                var areasComuns = await _context.AreasComuns
+                .Where(c => c.IdCondominioAreaComum == idCondominioToken)
+                .ToListAsync();
+
+                List<AreaComumDTO> areasRetorno = new List<AreaComumDTO>();
+                foreach (AreaComum x in areasComuns)
+                {
+                    AreaComumDTO areaDTO = new AreaComumDTO
+                    {
+                        Id = x.IdAreaComum,
+                        NomeAreaComumDTO = x.NomeAreaComum
+                    };
+                    areasRetorno.Add(areaDTO);
+                }
+
+                return Ok(areasRetorno);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-
     }
 }

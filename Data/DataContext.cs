@@ -18,109 +18,109 @@ namespace CondominusApi.Data
 
         }
         public DbSet<Apartamento> Apartamentos { get; set; }
-        public DbSet<ApartPessoa> ApartPessoas { get; set; }
         public DbSet<AreaComum> AreasComuns { get; set; }
-        public DbSet<Aviso> Avisos { get; set; }
         public DbSet<Condominio> Condominios { get; set; }
         public DbSet<Dependente> Dependentes { get; set; }
         public DbSet<Entrega> Entregas { get; set; }
+        public DbSet<Notificacao> Notificacoes { get; set; }
         public DbSet<Pessoa> Pessoas { get; set; }
-        public DbSet<Reserva> Reservas { get; set; }
+        public DbSet<PessoaAreaComum> PessoasAreasComuns { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // declaracao do relacionamento entre pessoa e area comum N para N
+            modelBuilder.Entity<PessoaAreaComum>()
+                .HasKey(pac => new { pac.IdPessoaPessArea, pac.IdAreaComumPessArea });
+            modelBuilder.Entity<PessoaAreaComum>()
+                .HasOne(pac => pac.PessoaPessArea)
+                .WithMany(p => p.PessoaACPessoa)
+                .HasForeignKey(pac => pac.IdPessoaPessArea);
+            modelBuilder.Entity<PessoaAreaComum>()
+                .HasOne(pac => pac.AreaComumPessArea)
+                .WithMany(ac => ac.PessoaACAreaComum)
+                .HasForeignKey(pac => pac.IdAreaComumPessArea);
+            // declaracao do relacionamento entre pessoa e usuario 1 para 1
+            modelBuilder.Entity<Pessoa>()
+            .HasOne(p => p.UsuarioPessoa)
+            .WithOne(u => u.PessoaUsuario)
+            .HasForeignKey<Usuario>(u => u.IdUsuario)
+            .IsRequired();
+            // declaracao de relacioanemnto entre pessoa e dependentes 1 para N
             modelBuilder.Entity<Dependente>()
-            .HasOne(d => d.Pessoa)
-            .WithMany(p => p.Dependentes)
-            .HasForeignKey(d => d.IdPessoa);
-
+            .HasOne(d => d.PessoaDependente)
+            .WithMany(p => p.DependentesPessoa)
+            .HasForeignKey(d => d.IdPessoaDependente)
+            .OnDelete(DeleteBehavior.Cascade);
+            // declaracao de relacioanemnto entre apartamento e pessoas 1 para N
+            modelBuilder.Entity<Pessoa>()
+            .HasOne(p => p.ApartamentoPessoa)
+            .WithMany(a => a.PessoasApart)
+            .HasForeignKey(p => p.IdApartamentoPessoa)
+            .OnDelete(DeleteBehavior.Cascade);
+            // declaracao de relacioanemnto entre condominio e apartamentos 1 para N
             modelBuilder.Entity<Apartamento>()
-            .HasOne(a => a.Condominio)
-            .WithMany(c => c.Apartamentos)
-            .HasForeignKey(a => a.IdCondominio);
-
+            .HasOne(a => a.CondominioApart)
+            .WithMany(c => c.ApartamentosCond)
+            .HasForeignKey(a => a.IdCondominioApart)
+            .OnDelete(DeleteBehavior.Cascade);
+            // declaracao de relacioanemnto entre apartamento e entregas 1 para N
             modelBuilder.Entity<Entrega>()
-            .HasOne(e => e.Apartamento)
-            .WithMany(a => a.Entregas)
-            .HasForeignKey(e => e.IdApartamento);
-
-            modelBuilder.Entity<ApartPessoa>()
-            .HasKey(pa => new { pa.IdPessoa, pa.IdApartamento });
-
-            modelBuilder.Entity<ApartPessoa>()
-            .HasOne(pa => pa.Pessoa)
-            .WithMany(p => p.Apartamentos)
-            .HasForeignKey(pa => pa.IdPessoa);
-
-            modelBuilder.Entity<ApartPessoa>()
-            .HasOne(pa => pa.Apartamento)
-            .WithMany(a => a.Pessoas)
-            .HasForeignKey(pa => pa.IdApartamento);
+            .HasOne(e => e.ApartamentoEnt)
+            .WithMany(a => a.EntregasApart)
+            .HasForeignKey(e => e.IdApartamentoEnt)
+            .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Condominio>().HasData(
-                new Condominio() { Id = 1, Nome = "Vila Nova Maria", Endereco = "Rua Guaranésia, 1070"},
-                new Condominio() { Id = 2, Nome = "Condomínio Aquarella Pari Colore", Endereco = "Rua Paulo Andrighetti, 1573"},
-                new Condominio() { Id = 3, Nome = "Condomínio Edifício Antônio Walter Santiago", Endereco = "Rua Paulo Andrighetti, 449"},
-                new Condominio() { Id = 4, Nome = "Condomínio Edifício Veneza", Endereco = "Rua Eugênio de Freitas, 525"}
+                new Condominio() { IdCond = 1, NomeCond = "Vila Nova Maria", EnderecoCond = "Rua Guaranésia, 1070", ApartamentosCond = {}},
+                new Condominio() { IdCond = 2, NomeCond = "Condomínio Aquarella Pari Colore", EnderecoCond = "Rua Paulo Andrighetti, 1573"},
+                new Condominio() { IdCond = 3, NomeCond = "Condomínio Edifício Antônio Walter Santiago", EnderecoCond = "Rua Paulo Andrighetti, 449"}
             );
             modelBuilder.Entity<Apartamento>().HasData(
-                new Apartamento() { Id = 1, Telefone = "11912345678", Numero = "A001", IdCondominio = 1 },
-                new Apartamento() { Id = 2, Telefone = "11912345678", Numero = "B002", IdCondominio = 1  },
-                new Apartamento() { Id = 3, Telefone = "11887654321", Numero = "C003", IdCondominio = 1  },
-                new Apartamento() { Id = 4, Telefone = "11955555555", Numero = "E005", IdCondominio = 1  }
+                new Apartamento() { IdApart = 1, TelefoneApart = "11912345678", NumeroApart = "A001", IdCondominioApart = 1 },
+                new Apartamento() { IdApart = 2, TelefoneApart = "11912345678", NumeroApart = "B002", IdCondominioApart = 1  },
+                new Apartamento() { IdApart = 3, TelefoneApart = "11887654321", NumeroApart = "C003", IdCondominioApart = 1  }
             );
-            modelBuilder.Entity<Entrega>().HasData(
-                new Entrega() { Id = 1, Destinatario = "Joao Guilherme", DataEntrega = null, DataRetirada = null, IdApartamento = 1 }
+            modelBuilder.Entity<Entrega>().HasData( // new DateTime(2021, 06, 05, 10, 20, 30) yyyy/MM/dd HH:mm:ss
+                new Entrega() { IdEnt = 1, DestinatarioEnt = "Joao Guilherme", CodEnt = "NBR1354897", DataEntregaEnt = DateTime.Now, DataRetiradaEnt = DateTime.Now.AddDays(1), IdApartamentoEnt = 1 },
+                new Entrega() { IdEnt = 2, DestinatarioEnt = "Maria Joaquina", CodEnt = "NBR2468135", DataEntregaEnt = DateTime.Now, DataRetiradaEnt = DateTime.Now.AddDays(2), IdApartamentoEnt = 2 },
+                new Entrega() { IdEnt = 3, DestinatarioEnt = "Ana Clara", CodEnt = "NBR3581415", DataEntregaEnt = DateTime.Now, DataRetiradaEnt = DateTime.Now.AddDays(1), IdApartamentoEnt = 3 }
             );
-            modelBuilder.Entity<AreaComum>().HasData(
-                new AreaComum() { Id = 1, Capacidade = 50, Nome = "Salão de Festas" },
-                new AreaComum() { Id = 2, Capacidade = 30, Nome = "Churrasqueira" },
-                new AreaComum() { Id = 3, Capacidade = 20, Nome = "Sala de Jogos" },
-                new AreaComum() { Id = 4, Capacidade = 10, Nome = "Piscina" }
+            modelBuilder.Entity<Pessoa>().HasData( // usuario adicionado depois
+                new Pessoa(){ IdPessoa = 1, NomePessoa = "João Gomes", TelefonePessoa = "11924316523", TipoPessoa = "Admin", CpfPessoa = "56751898901", IdApartamentoPessoa = 1},
+                new Pessoa(){ IdPessoa = 2, NomePessoa = "Maria Oliveira", TelefonePessoa = "1198254351", TipoPessoa = "Morador", CpfPessoa = "89674156892", IdApartamentoPessoa = 2},
+                new Pessoa(){ IdPessoa = 3, NomePessoa = "João Viana", TelefonePessoa = "11984512345", TipoPessoa = "Morador", CpfPessoa = "32569874561", IdApartamentoPessoa = 3}
             );
-            modelBuilder.Entity<Pessoa>().HasData(
-                new Pessoa(){ Id = 1, Nome = "João Gomes", Cpf = "56751898901", Telefone = "11924316523"},
-                new Pessoa(){ Id = 2, Nome = "Paola Oliveira", Cpf = "63158658205", Telefone = "11975231678"},
-                new Pessoa(){ Id = 3, Nome = "Marilia Mendonça", Cpf = "27458823908", Telefone = "11937512056"},
-                new Pessoa(){ Id = 4, Nome = "Sorriso Maroto", Cpf = "32152898910", Telefone = "11987618735"}
-            );
-            modelBuilder.Entity<Reserva>().HasData(
-                new Reserva(){ Id = 1},
-                new Reserva(){ Id = 2},
-                new Reserva(){ Id = 3},
-                new Reserva(){ Id = 4}
-            );
-            modelBuilder.Entity<Dependente>().HasData(
-                new Dependente() { Id = 1, Nome = "João Gomes", Telefone = "11924316523", IdPessoa = 1},
-                new Dependente() { Id = 2, Nome = "Maria Silva", Telefone = "11876543210", IdPessoa = 1 },
-                new Dependente() { Id = 3, Nome = "Carlos Oliveira", Telefone = "11234567890", IdPessoa = 2 },
-                new Dependente() { Id = 4, Nome = "Ana Souza", Telefone = "11987654321", IdPessoa = 3 },
-                new Dependente() { Id = 5, Nome = "Pedro Santos", Telefone = "11765432109", IdPessoa = 3 }
-            );
-
-            Usuario user = new Usuario();     
+            // criacao senha para usuarios padroes
             Criptografia.CriarPasswordHash("123456", out byte[] hash, out byte[] salt);
             Criptografia.CriarPasswordHash("654321", out byte[] hashJ, out byte[] saltJ);
 
-            user.Id = 1;
-            user.Nome = "UsuarioAdmin";            
-            user.Perfil = "Admin";
-            user.Email = "admin@gmail.com";
-            user.PasswordHash = hash;
-            user.PasswordSalt = salt;
-            user.PasswordString = string.Empty;
-            user.IdApartamento = 1;
-
-            modelBuilder.Entity<Usuario>().HasData(user);            
-            //Fim da criação do usuário padrão.
-
             modelBuilder.Entity<Usuario>().HasData
             (
-                new Usuario() { Id = 3, Nome = "UsuarioSindico", Perfil = "Sindico", Email = "UsuarioSindico@gmail.com", 
-                PasswordHash = hash, PasswordSalt = salt, PasswordString = null, IdApartamento = 2 },
-                new Usuario() { Id = 4, Nome = "UsuarioMorador", Perfil = "Morador", Email = "UsuarioMorador@gmail.com", 
-                PasswordHash = hash, PasswordSalt = salt, PasswordString = null, IdApartamento = 3 }
+                new Usuario() { IdUsuario = 1, EmailUsuario = "admin@gmail.com", PasswordHashUsuario = hash, PasswordSaltUsuario = salt, SenhaUsuario = null, IdPessoaUsuario = 1 }
+            );
+            
+            modelBuilder.Entity<AreaComum>().HasData(
+                new AreaComum() { IdAreaComum = 1, NomeAreaComum = "Churrasqueira" },
+                new AreaComum() { IdAreaComum = 2, NomeAreaComum = "Salão de Jogos" },
+                new AreaComum() { IdAreaComum = 3, NomeAreaComum = "Quadra" }
+            );
+            // modelBuilder.Entity<PessoaAreaComum>().HasData(
+            //     // new PessoaAreaComum() { IdPessArea = 1, dataHoraInicioPessArea = new DateTime(2023, 12, 05, 15, 00, 00), dataHoraFimPessArea = new DateTime(2023, 12, 05, 18, 00, 00), IdPessoaPessArea = 1, IdAreaComumPessArea = 1 },
+            //     // new PessoaAreaComum() { IdPessArea = 2, dataHoraInicioPessArea = new DateTime(2023, 12, 06, 13, 00, 00), dataHoraFimPessArea = new DateTime(2023, 12, 06, 16, 00, 00), IdPessoaPessArea = 2, IdAreaComumPessArea = 1 },
+            //     // new PessoaAreaComum() { IdPessArea = 3, dataHoraInicioPessArea = new DateTime(2023, 12, 16, 18, 00, 00), dataHoraFimPessArea = new DateTime(2023, 12, 16, 21, 00, 00), IdPessoaPessArea = 2, IdAreaComumPessArea = 2 }
+            // );
+
+            modelBuilder.Entity<Notificacao>().HasData(
+                new Notificacao() { IdNotificacao = 1, AssuntoNotificacao = "Manutenção elétrica", MensagemNotificacao = "Haverá manutencão no quadro de força do prédio, dia: 20/12 as 14 horas",  DataEnvioNotificacao = new DateTime(2023, 12, 06, 09, 13, 22), TipoNotificacao = "Aviso", IdCondominioNotificacao = "1"}
+            );
+
+            modelBuilder.Entity<Dependente>().HasData(
+                new Dependente() { IdDependente = 1, NomeDependente = "João Gomes", CpfDependente = "11242100083", IdPessoaDependente = 1},
+                new Dependente() { IdDependente = 2, NomeDependente = "Maria Silva", CpfDependente = "30777454025", IdPessoaDependente = 1 },
+                new Dependente() { IdDependente = 3, NomeDependente = "Carlos Oliveira", CpfDependente = "53086593032", IdPessoaDependente = 2 },
+                new Dependente() { IdDependente = 4, NomeDependente = "Ana Souza", CpfDependente = "54710630070", IdPessoaDependente = 3 },
+                new Dependente() { IdDependente = 5, NomeDependente = "Pedro Santos", CpfDependente = "03940474002", IdPessoaDependente = 3 }
             );
         }
     }
